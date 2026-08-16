@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evoincubation"
+version = "0.1.0"
+description = "Reproducible experiments for evolution-conditioned poisoning of SkillOpt skills"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+server = [
+  "skillopt @ git+https://github.com/microsoft/SkillOpt.git@9639719632daecacd1baaa47fe781f3c0253600a",
+]
+attack = [
+  "openai>=1.30.0",
+]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.4",
+]
+
+[project.scripts]
+evoincubation = "evoincubation.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
