@@ -1,0 +1,79 @@
+{
+  "created_at": "2026-08-27T03:56:23.173187+00:00",
+  "endpoint": "http://127.0.0.1:19380/v1",
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "gpu_ids": [
+    0,
+    6
+  ],
+  "long_request": {
+    "answer": "CTX65_OK",
+    "content_sha256": "fbb47f2b2dc82424d7739686412184da2fdd5b2a9a8448b96e9718225cdb49f5",
+    "enable_thinking": true,
+    "local_prompt_tokens": 40000,
+    "repetitions": 39938,
+    "requested_output_tokens": 2048,
+    "usage": {
+      "completion_tokens": 53,
+      "prompt_tokens": 40000,
+      "prompt_tokens_details": null,
+      "total_tokens": 40053
+    }
+  },
+  "model_identity": {
+    "alias": "Qwen3.8-27B-FP8",
+    "config_sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+    "crc_manifest_sha256": "5ccb0f7436ae756484561fe915780509845f903ea1780dbe9b0a3a7a0dd095ac",
+    "repository": "Qwen/Qwen3.8-27B-FP8",
+    "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+    "weight_index_sha256": "f0838c766951bdfe76d6afbdb2771a8f67aaa2231dedb3d33cebd817729843a2"
+  },
+  "observed_after_request": [
+    {
+      "memory_free_mib": 1705,
+      "memory_used_mib": 22318,
+      "physical_gpu_id": 0,
+      "utilization_percent": 59
+    },
+    {
+      "memory_free_mib": 1705,
+      "memory_used_mib": 22318,
+      "physical_gpu_id": 6,
+      "utilization_percent": 95
+    }
+  ],
+  "role": "optimizer",
+  "runtime_packages": {
+    "torch": "2.11.0+cu129",
+    "transformers": "5.8.0",
+    "vllm": "0.21.0+cu129"
+  },
+  "schema_version": 3,
+  "scope": "role_bound_65k_thinking_qualification",
+  "serving_contract": {
+    "attention_backend": "TRITON_ATTN",
+    "disable_custom_all_reduce": true,
+    "dtype": "float16",
+    "enable_auto_tool_choice": true,
+    "enable_thinking": true,
+    "enforce_eager": true,
+    "gdn_prefill_backend": "triton",
+    "gpu_memory_utilization": 0.9,
+    "language_model_only": true,
+    "limit_mm_per_prompt": {
+      "image": 0,
+      "video": 0
+    },
+    "max_model_len": 65536,
+    "max_num_batched_tokens": 4096,
+    "max_num_seqs": 2,
+    "reasoning_parser": "qwen3",
+    "role": "optimizer",
+    "seed": 0,
+    "tensor_parallel_size": 2,
+    "tool_call_parser": "qwen3_coder",
+    "venv": "/work/tc442/venvs/qwen38",
+    "vllm_use_flashinfer_sampler": "0"
+  },
+  "status": "passed"
+}

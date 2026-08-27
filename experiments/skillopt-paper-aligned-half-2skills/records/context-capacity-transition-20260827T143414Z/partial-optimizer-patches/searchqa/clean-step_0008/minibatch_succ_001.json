@@ -1,0 +1,25 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "All 8 trajectories are Jeopardy-style questions where the 'this [category noun]' phrase (this country, this cheese, this organization's, this creator of) serves as the definitive answer-type indicator, and the agent correctly extracted the entity in that category.",
+    "In every case the answer was found via the fast path: the clue text appeared verbatim or near-verbatim in the first topically relevant passage, and the agent resolved the entity in a single step without over-reasoning.",
+    "When the question includes a 'formerly X' or 'previously Y' clause (e.g., 'this country, formerly Rhodesia'), the agent correctly treated it as a confirming detail for the CURRENT name rather than answering with the former name.",
+    "For well-known figures, the agent used the universally recognized common name ('Grandma Moses') rather than the full birth name ('Anna Mary Robertson Moses'), matching how the person is identified in the clue and context."
+  ],
+  "patch": {
+    "reasoning": "The batch uniformly demonstrates Jeopardy-style resolution where 'this [category]' dictates the answer type and 'formerly X' clauses serve as disambiguation confirmers. The skill lists a few 'this X' examples but doesn't generalize the pattern or address the 'formerly' disambiguation. The Grandma Moses case also shows that the universally recognized name (artist name, stage name) takes priority over the birth name, which is subtly different from the existing 'formal full first name' rule (which is about first-name formality, not alias vs. birth name).",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- \"this person\" / \"who\" → answer is a person's name",
+        "content": "  - \"this country\" / \"this state\" / \"this city\" → the place name (current, not former)\n  - \"this cheese\" / \"this dance\" / \"this conflict\" / \"this organization's\" → the category/type/event/organization name\n  - \"this creator of X\" / \"this author of Y\" → the person's name\n  - **\"Formerly X\" / \"previously Y\" as confirming detail:** When the question includes a former name in a relative clause (e.g., \"this country, formerly Rhodesia\" or \"Hwange, formerly Wankie\"), the former name is a disambiguation clue, NOT the answer. Answer with the current/standard name."
+      },
+      {
+        "op": "insert_after",
+        "target": "- For people: prefer the formal full first name if it appears anywhere in the context (e.g., \"Patricia Hearst\" over \"Patty Hearst\"). If only the nickname appears, use that.",
+        "content": "- **Universally recognized name over birth name:** When a person is known by a professional name, artist name, or widely used alias (e.g., \"Grandma Moses\" for Anna Mary Robertson Moses, \"Dr. Seuss\" for Theodor Geisel), use that recognized name rather than the full birth name. The existing rule about \"formal full first name\" applies to first-name formality (Patricia vs. Patty), not to choosing between a birth name and a universally known alias."
+      }
+    ]
+  },
+  "source_type": "success"
+}

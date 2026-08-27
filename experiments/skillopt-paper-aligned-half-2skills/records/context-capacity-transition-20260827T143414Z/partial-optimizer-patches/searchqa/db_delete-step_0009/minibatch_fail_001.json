@@ -1,0 +1,26 @@
+{
+  "batch_size": 1,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agent produced an empty answer despite clear context match (Moll Flanders by Defoe) and existing bare-fragment/Jeopardy-clue rules; likely confused by concatenated question text 'FlirtatiousfloozyFlanders' and the '(4)' letter-count hint"
+    }
+  ],
+  "patch": {
+    "reasoning": "The agent output an empty string, the most severe failure mode. The question 'FlirtatiousfloozyFlanders (4)' has words concatenated without spaces and includes a letter-count hint '(4)'. The context clearly contains 'Moll Flanders by Daniel Defoe' with 'floozy' and 'flirtation' nearby. Two gaps: (1) no rule explicitly forbids empty answers or mandates a best-guess fallback, and (2) no rule addresses concatenated/merged question text or numeric letter-count hints like '(4)'. Adding both will prevent the agent from stalling on unusual formatting and ensure it always extracts the answer from context.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Ignore Jeopardy metadata in the question:** Parenthetical text that describes a photo (e.g., \"(Jimmy of the Clue Crew at the St. James Theatre in New York City)\") or provides a word-count hint (e.g., \"(15)\") is NOT part of the clue. Focus your analysis on the actual descriptive/question text only.",
+        "content": "\n- **Numeric letter/word-count hints in parentheses:** A parenthetical number like \"(4)\" or \"(15)\" at the end of a Jeopardy clue indicates the **letter count** (or word count) of the expected answer. Use it as a verification constraint: your answer must have exactly that many letters (or words). Example: \"Flirtatious floozy Flanders (4)\" → the answer must be 4 letters → `Moll` (from *Moll Flanders* by Daniel Defoe). Do NOT include the number in your answer.\n- **Concatenated / merged question text:** Sometimes the question's words appear run together without spaces (e.g., \"FlirtatiousfloozyFlanders\"). Parse this by splitting on capital letters and natural word boundaries to recover the individual clue words. Treat the recovered words as a normal Jeopardy clue. Example: \"FlirtatiousfloozyFlanders\" → \"Flirtatious floozy Flanders\" → the entity is *Moll Flanders* → answer `Moll`."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Your entire response must be ONLY the `<answer>...</answer>` tag.** Do not write any reasoning, explanation, preamble, or commentary before or after the tag. No \"Based on the context…\", no \"The answer is…\", no bullet-point analysis.",
+        "content": "\n- **NEVER output an empty answer.** If you are uncertain, still commit to your best single-entity guess based on the strongest contextual match. An empty or missing `<answer>` tag is always scored as 0; a wrong guess at least has a chance of partial credit. Scan the context for the most prominent named entity that fits the clue's descriptors and output it."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

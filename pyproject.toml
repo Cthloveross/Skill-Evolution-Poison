@@ -37,6 +37,10 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+# The copied SkillSandbox verifier bundle is a pinned third-party runtime asset.
+extend-exclude = [
+  "experiments/**/vendor/**",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]

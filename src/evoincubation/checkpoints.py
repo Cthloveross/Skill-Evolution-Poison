@@ -44,13 +44,13 @@ def discover_checkpoints(skill_dir: Path) -> list[SkillCheckpoint]:
 
 
 def select_monitor_checkpoints(checkpoints: list[SkillCheckpoint]) -> list[SkillCheckpoint]:
-    """Keep baseline, changed descendants, and final without double counting."""
+    """Keep baseline, admission, changed descendants, and final timeline points."""
     if not checkpoints:
         return []
-    selected = [checkpoints[0]]
-    selected.extend(
-        checkpoint for checkpoint in checkpoints[1:] if checkpoint.changed_from_previous
+    selected_versions = {checkpoints[0].version, checkpoints[-1].version}
+    if len(checkpoints) > 1:
+        selected_versions.add(checkpoints[1].version)
+    selected_versions.update(
+        checkpoint.version for checkpoint in checkpoints[1:] if checkpoint.changed_from_previous
     )
-    if selected[-1].version != checkpoints[-1].version:
-        selected.append(checkpoints[-1])
-    return selected
+    return [checkpoint for checkpoint in checkpoints if checkpoint.version in selected_versions]

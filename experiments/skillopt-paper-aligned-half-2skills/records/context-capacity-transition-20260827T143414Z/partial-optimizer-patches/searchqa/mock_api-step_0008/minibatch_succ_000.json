@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "All 8 questions use the 'this [type/category word]' Jeopardy structure where 'this' is the answer slot; agents correctly filled that slot with just the entity's shortest common name (e.g., 'Cheddar' not 'Cheddar cheese', 'Seville' not 'Seville, Spain', 'Boeing' not 'The Boeing Company').",
+    "All agents output only the <answer> tag with a 1-3 word entity name, with zero preamble, zero reasoning, and zero extra descriptors — perfectly matching the skill's output format rules.",
+    "All agents matched ALL descriptors in the question simultaneously (e.g., 'British sculptor' + 'UNESCO building' + 'Paris' → Henry Moore; '1945 conference' + 'Crimean city' + '4 zones' → Yalta) rather than latching onto the most prominent entity in context."
+  ],
+  "patch": {
+    "reasoning": "The 8/8 success rate confirms the existing skill rules are effective for the dominant 'this [type word]' Jeopardy pattern. The previous-step failures (11 and 8 tasks) were agents violating existing rules (adding descriptors, wrong form, dropping name parts). A brief, high-visibility 'golden rule' summary at the top of the Answer Conciseness section can serve as a final checkpoint before output, reducing the chance agents skip the detailed rules below. No new top-level section is needed; a short reinforcement paragraph is sufficient.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "## Answer Conciseness & Granularity",
+        "content": "\n**Golden rule (check before outputting):** The answer is the single entity that fills the \"this ___\" slot in the question. It is 1–3 words, in the shortest common form the context uses, with no type words, no location qualifiers, no articles, and no descriptors already present in the question. If you catch yourself writing more than a few words, you are almost certainly adding something that belongs in the question, not the answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

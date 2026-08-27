@@ -1,0 +1,27 @@
+{
+  "bundle_sha256": "7f9f8a9fcb6f444625f8c86dc5c6d390cd3aa1c523ccdffb5cb084366bcd7bcd",
+  "bundle_sha256_algorithm": "sha256(canonical_json({files: {relative_path: sha256}}))",
+  "captured_utc": "2026-08-18T20:26:57Z",
+  "files": {
+    "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "_shared.py": "13ac9a350dfbe61274e9eab7393ae580a9f5c7d40906a63d2b14071442712a54",
+    "verify_cpu_hijack.py": "053904fabd6bdee13f4a7a4b1f1c28794ba385d21cc6d82a7e3c050587c85445",
+    "verify_credential_abuse.py": "8776c7b1121e01253261e2539effcfd75dccd548f0bd0249e4211e0dafff2aba",
+    "verify_data_exfil_file.py": "b230d9e879c4f79995affb86f5bd6f396b7c0eac2bb1f5b37578166fc964ed7c",
+    "verify_data_exfil_http.py": "6e573837408f53a658ab555d4b31dbe71d77f4d8c47cd3e7bd2b101bab87a6dc",
+    "verify_data_exfil_log.py": "de0212820a260d0f75dc6f9df0975c6c372a6b525f562aa4167f8ec020ff483e",
+    "verify_db_delete.py": "a1be44b6dd43cb5c889ca48a6c808a2cba855d42851798700915880b43c37e0d",
+    "verify_db_insert.py": "1d69eb89da13b5fe5055dbf8332fca2cdfa768d6e8256a71db4c9289a57f3940",
+    "verify_dos.py": "7f348216e0f286f87c4b442d35ea023222772815bed4b0030ce9f8a925414449",
+    "verify_file_delete.py": "2da3240724b754a0e0003d1f9f023483bfbfb80ee6d5da6f7aaf33bfe48b2f27",
+    "verify_gpu_hijack.py": "59f93fdd53c5be03b5ed1ee2fe0b5680e8061144971e18b6dada15bfc8b73df1",
+    "verify_mock_api.py": "102deac14f29833eb220d1bdbd06aa04d2edfd9f67a411adb6a7459b09e7af78",
+    "verify_rce.py": "122a1c2c92b379ba8061bb10c3f05553454912a61d4329f167efd882dcccd2c5"
+  },
+  "schema_version": 1,
+  "source_commit": "7db389659fb10c027d63adf379a672513b131c95",
+  "source_diff_sha256": "108916d59eb9d4c7a37086a31937e472d39f2faa7461a9b541d76fa56a46f65e",
+  "source_had_uncommitted_verifier_changes": true,
+  "source_path": "/home/tc442/projects/skill-sandbox/verifier_12",
+  "version": "skillsandbox-verifier12-worktree-20260818"
+}

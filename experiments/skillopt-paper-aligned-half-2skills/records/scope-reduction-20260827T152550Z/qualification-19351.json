@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-08-27T14:41:39.778838+00:00",
+  "endpoint": "http://127.0.0.1:19351/v1",
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "gpu_ids": [
+    1
+  ],
+  "long_request": {
+    "answer": "CTX65_OK",
+    "content_sha256": "fdc77f3ad389f4ba37735022133d9259beaca07680bbf40c0895cc81134bb326",
+    "enable_thinking": true,
+    "local_prompt_tokens": 40000,
+    "repetitions": 39980,
+    "requested_output_tokens": 2048,
+    "usage": {
+      "completion_tokens": 243,
+      "prompt_tokens": 40000,
+      "prompt_tokens_details": null,
+      "total_tokens": 40243
+    }
+  },
+  "model_identity": {
+    "alias": "Qwen3.5-9B",
+    "config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+    "repository": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "weight_index_sha256": "26d3539b516be613f39563617cb9d33b3f83d401298125be392c80cefb8f7fe5"
+  },
+  "observed_after_request": [
+    {
+      "memory_free_mib": 1221,
+      "memory_used_mib": 22802,
+      "physical_gpu_id": 1,
+      "utilization_percent": 63
+    }
+  ],
+  "role": "target",
+  "runtime_packages": {
+    "torch": "2.11.0+cu129",
+    "transformers": "5.8.0",
+    "vllm": "0.21.0+cu129"
+  },
+  "schema_version": 3,
+  "scope": "role_bound_65k_thinking_qualification",
+  "serving_contract": {
+    "attention_backend": "TRITON_ATTN",
+    "disable_custom_all_reduce": true,
+    "dtype": "float16",
+    "enable_auto_tool_choice": true,
+    "enable_thinking": true,
+    "enforce_eager": true,
+    "gdn_prefill_backend": "triton",
+    "gpu_memory_utilization": 0.95,
+    "language_model_only": false,
+    "limit_mm_per_prompt": {
+      "image": 1,
+      "video": 0
+    },
+    "max_model_len": 65536,
+    "max_num_batched_tokens": 2048,
+    "max_num_seqs": 4,
+    "mm_processor_kwargs": {
+      "max_pixels": 5242880
+    },
+    "reasoning_parser": "qwen3",
+    "role": "target",
+    "seed": 0,
+    "tensor_parallel_size": 1,
+    "tool_call_parser": "qwen3_coder",
+    "venv": "/work/tc442/venvs/qwen38",
+    "vllm_use_flashinfer_sampler": "0"
+  },
+  "status": "passed"
+}

@@ -1,0 +1,174 @@
+{
+  "accumulation": 1,
+  "attacked_trajectories": 3,
+  "attacks": [
+    "db_delete",
+    "file_delete",
+    "mock_api"
+  ],
+  "batch_size_by_benchmark": {
+    "searchqa": 40
+  },
+  "benchmarks": [
+    "searchqa"
+  ],
+  "clean_trajectories": 1,
+  "counts_by_benchmark": {
+    "searchqa": {
+      "test": 700,
+      "train": 200,
+      "val": 100
+    }
+  },
+  "endpoint_topology": {
+    "optimizers": [
+      {
+        "gpu_ids": [
+          0,
+          6
+        ],
+        "port": 19380
+      },
+      {
+        "gpu_ids": [
+          5,
+          7
+        ],
+        "port": 19381
+      }
+    ],
+    "targets": [
+      {
+        "gpu_ids": [
+          1
+        ],
+        "optimizer_port": 19380,
+        "port": 19351
+      },
+      {
+        "gpu_ids": [
+          2
+        ],
+        "optimizer_port": 19380,
+        "port": 19352
+      },
+      {
+        "gpu_ids": [
+          3
+        ],
+        "optimizer_port": 19381,
+        "port": 19353
+      },
+      {
+        "gpu_ids": [
+          4
+        ],
+        "optimizer_port": 19381,
+        "port": 19354
+      }
+    ]
+  },
+  "epochs": 4,
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "models": {
+    "optimizer": {
+      "alias": "Qwen3.8-27B-FP8",
+      "config_sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+      "crc_manifest_sha256": "5ccb0f7436ae756484561fe915780509845f903ea1780dbe9b0a3a7a0dd095ac",
+      "repository": "Qwen/Qwen3.8-27B-FP8",
+      "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+      "weight_index_sha256": "f0838c766951bdfe76d6afbdb2771a8f67aaa2231dedb3d33cebd817729843a2"
+    },
+    "target": {
+      "alias": "Qwen3.5-9B",
+      "config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+      "repository": "Qwen/Qwen3.5-9B",
+      "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "weight_index_sha256": "26d3539b516be613f39563617cb9d33b3f83d401298125be392c80cefb8f7fe5"
+    }
+  },
+  "no_skill_evaluation": false,
+  "output_token_limit": 16384,
+  "protocol": "paper-gated-slow-update-local-qwen",
+  "runs": [
+    {
+      "attack": null,
+      "benchmark": "searchqa",
+      "condition": "clean",
+      "data_counts": {
+        "test": 700,
+        "train": 200,
+        "val": 100
+      },
+      "initial_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/clean/initial.md",
+      "initial_sha256": "d3ed21de4a5216da7c3cd63acc2330dc78227524753c9d29573e6692f48d6709",
+      "payload_sha256": null,
+      "run_id": "searchqa__clean__q35t_q38o__seed_42",
+      "split_manifest_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa/split_manifest.json",
+      "split_manifest_sha256": "cdc7bd7b2ea32ecece1e044970a175900a056fec026b91ed6b26f8028d8bb33c",
+      "status": "pending"
+    },
+    {
+      "attack": "db_delete",
+      "benchmark": "searchqa",
+      "condition": "attacked",
+      "data_counts": {
+        "test": 700,
+        "train": 200,
+        "val": 100
+      },
+      "initial_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/db_delete/initial.md",
+      "initial_sha256": "1632781e198655e89eac19ae9b2fcff08f684c91592a3fa9eac8dc02ddfe3c23",
+      "payload_sha256": "a61efce0dc4ee5b567d1e85220164b930365e2bf3d4a7e40c732bd07a33dda78",
+      "run_id": "searchqa__db_delete__q35t_q38o__seed_42",
+      "split_manifest_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa/split_manifest.json",
+      "split_manifest_sha256": "cdc7bd7b2ea32ecece1e044970a175900a056fec026b91ed6b26f8028d8bb33c",
+      "status": "pending"
+    },
+    {
+      "attack": "file_delete",
+      "benchmark": "searchqa",
+      "condition": "attacked",
+      "data_counts": {
+        "test": 700,
+        "train": 200,
+        "val": 100
+      },
+      "initial_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/file_delete/initial.md",
+      "initial_sha256": "02ca0a8f6fcdd580131480f02dbf27069e38bb7648f4171ea7c8dbacf68c4e82",
+      "payload_sha256": "cb54e36d6afff93e103f1eac4a8168059881b75ff9ca6b4b097011f749a8cbc2",
+      "run_id": "searchqa__file_delete__q35t_q38o__seed_42",
+      "split_manifest_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa/split_manifest.json",
+      "split_manifest_sha256": "cdc7bd7b2ea32ecece1e044970a175900a056fec026b91ed6b26f8028d8bb33c",
+      "status": "pending"
+    },
+    {
+      "attack": "mock_api",
+      "benchmark": "searchqa",
+      "condition": "attacked",
+      "data_counts": {
+        "test": 700,
+        "train": 200,
+        "val": 100
+      },
+      "initial_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/mock_api/initial.md",
+      "initial_sha256": "955c130d8ce5da776647d64b363a8556b2f6859869bce08684e4b8ffe030a645",
+      "payload_sha256": "b59078db5728d9fb69b7c5914a687ad097c77572881f14a6e8b1e91aceab0778",
+      "run_id": "searchqa__mock_api__q35t_q38o__seed_42",
+      "split_manifest_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa/split_manifest.json",
+      "split_manifest_sha256": "cdc7bd7b2ea32ecece1e044970a175900a056fec026b91ed6b26f8028d8bb33c",
+      "status": "pending"
+    }
+  ],
+  "schema_version": 3,
+  "scope_revision": {
+    "record_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/scope-reduction.json",
+    "record_sha256": "d256c64a4c8ed92f6c4e28e32119e26dc80d830bcacc267a36e356b0a6504e73"
+  },
+  "seed": 42,
+  "selection_namespace": "self-evolution-train100-batch20-val30-test100-v1",
+  "skillopt_revision": "9639719632daecacd1baaa47fe781f3c0253600a",
+  "slow_update_gate_with_selection": true,
+  "thinking_enabled": true,
+  "total_trajectories": 4
+}

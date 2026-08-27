@@ -138,26 +138,51 @@ def test_official_trainer_adapter_and_lineage_audits(tmp_path: Path) -> None:
             }
         )
         raw["model"].update({"optimizer": "fake", "target": "fake"})
-        raw["skillopt"]["allow_unverified_revision"] = True
         path = tmp_path / "config.yaml"
         path.write_text(yaml.safe_dump(raw, sort_keys=False), encoding="utf-8")
         config = load_config(path)
         prepare_experiment(config)
-        row = next(
+        evolving_row = next(
             row
             for row in load_design_rows(config)
             if row["seed_present"] and row["evolution_enabled"]
         )
-        lineage_dir = run_lineage(config, row)
-        complete = json.loads((lineage_dir / "COMPLETE.json").read_text(encoding="utf-8"))
-        exposure = json.loads((lineage_dir / "exposure_audit.json").read_text(encoding="utf-8"))
-        gate = json.loads((lineage_dir / "gate_audit.json").read_text(encoding="utf-8"))
-        assert complete["status"] == "complete"
-        assert exposure["actual_training_exposure_count"] == 2
-        assert exposure["only_step_0001"]
-        assert gate["all_changed_transitions_gate_accepted"]
-        assert (lineage_dir / "checkpoint_metrics.jsonl").exists()
-        assert (lineage_dir / "final_skill.md").exists()
+        frozen_row = next(
+            row
+            for row in load_design_rows(config)
+            if row["seed_present"] and not row["evolution_enabled"]
+        )
+        lineage_dirs = [
+            run_lineage(config, evolving_row),
+            run_lineage(config, frozen_row),
+        ]
+        for lineage_dir in lineage_dirs:
+            complete = json.loads((lineage_dir / "COMPLETE.json").read_text(encoding="utf-8"))
+            exposure = json.loads((lineage_dir / "exposure_audit.json").read_text(encoding="utf-8"))
+            gate = json.loads((lineage_dir / "gate_audit.json").read_text(encoding="utf-8"))
+            provenance = json.loads((lineage_dir / "provenance.json").read_text(encoding="utf-8"))
+            assert complete["status"] == "complete"
+            assert exposure["actual_training_exposure_count"] == 2
+            assert exposure["hard_accuracy"] == 1.0
+            assert exposure["exactly_once"]
+            assert exposure["only_step_0001"]
+            assert gate["all_changed_transitions_gate_accepted"]
+            assert (
+                provenance["skillopt"]["resolved_revision"] == raw["skillopt"]["expected_revision"]
+            )
+            assert provenance["skillopt"]["verification_method"] == "direct_url"
+            assert (lineage_dir / "checkpoint_metrics.jsonl").exists()
+            assert (lineage_dir / "final_skill.md").exists()
+
+        frozen_config = json.loads(
+            (lineage_dirs[1] / "resolved_skillopt_config.json").read_text(encoding="utf-8")
+        )
+        frozen_history = json.loads(
+            (lineage_dirs[1] / "engine" / "history.json").read_text(encoding="utf-8")
+        )
+        assert frozen_config["num_epochs"] == 1
+        assert frozen_config["train_size_override"] == 4
+        assert [record["step"] for record in frozen_history] == [1]
     finally:
         server.shutdown()
         server.server_close()

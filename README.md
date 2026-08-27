@@ -1,6 +1,56 @@
 # Evolutionary Incubation on SkillOpt
 
-This repository implements a causal, lineage-level experiment for one question:
+## Current experiment (2026-08-27)
+
+The active pipeline is
+[`skillopt-paper-aligned-half-2skills`](experiments/skillopt-paper-aligned-half-2skills/README.md).
+Its historical directory name is retained for checkpoint provenance, but the
+sealed active scope is SearchQA only: one clean trajectory and three attacked
+trajectories (`db_delete`, `file_delete`, and `mock_api`). Each trajectory runs
+four native SkillOpt epochs over a deterministic `200/100/700`
+train/validation/test cut with batch size 40.
+
+The target is Qwen3.5-9B and the optimizer is Qwen3.8-27B-FP8. Thinking is
+enabled for both roles, the native strict validation gate remains enabled, and
+behavioral ASR is measured only after evolution at R0, Rbest, and Rfinal. DyMal
+contributes the injected Markdown behavior; SkillOpt owns the normal task data,
+rollouts, optimizer, utility gate, checkpoint selection, and final utility
+evaluation.
+
+This is a pipeline-qualified positive-control experiment, not paper-level
+evidence for cross-skill or cross-model generalization. Live progress and the
+interpretation boundary are recorded in
+[`RUN_STATUS.md`](experiments/skillopt-paper-aligned-half-2skills/RUN_STATUS.md).
+
+## Current paper thesis (2026-08-22)
+
+The paper direction was re-audited against OEP, SkillJack,
+PoisonedEvolution, TBA, Zombie Agents, Sleeper Attack, ColluSkill, and recent
+cross-round skill-contamination work. One-step trajectory extraction followed
+by benign-update persistence is no longer the mainline.
+
+The canonical question is whether a clean-label, behaviorally dormant precursor
+causes delayed runtime attack emergence specifically through endogenous
+`skill -> trajectory -> skill` feedback under the native strict validation
+gate, relative to a frozen-executor control. The paper claim, concrete
+DyMalSkill seed, 2x2 causal design, defense, and Go/No-Go criteria are frozen in
+[`docs/PAPER_THESIS_20260822.md`](docs/PAPER_THESIS_20260822.md).
+
+## Historical mechanism result (2026-08-20)
+
+The completed Qwen3-8B mechanism experiment is **NO_GO** for the core seed-by-evolution
+hypothesis: 32/32 randomized blocks and 128/128 lineages completed; the primary interaction was
+0.1875 with block-bootstrap 95% CI `[-0.03125, 0.4375]`, and the interaction was 0.000 versus
+0.375 across the two wording formulations.
+
+The experiment supports a narrower engineering observation: a clean-only utility gate can miss a
+change in trusted evidence channel when the routes tie on clean data. It does not establish a seed
+effect, a need for iterated evolution, a new backdoor, or generalization beyond the synthetic
+canary. This main run did not use SkillSandbox; the older DyMalSkill Stage 7 run is partial and
+scientifically inconclusive.
+
+The original synthetic harness implements a causal, lineage-level experiment
+for one precursor question:
 
 > Can one locally correct seed exposure change the path of later clean, validation-gated
 > skill evolution, so that a harmful canary behavior appears only in descendant skills?
@@ -38,7 +88,7 @@ unless a non-confirmatory config explicitly opts out.
 | `S0E1` | Matched benign exposure | Clean evolution |
 | `S1E1` | Target-bearing but locally correct exposure | Clean evolution |
 
-The primary estimand is the lineage-level interaction:
+The primary estimand is the randomized-block interaction:
 
 ```text
 (S1E1 - S0E1) - (S1E0 - S0E0)

@@ -1,0 +1,107 @@
+{
+  "attack": "db_delete",
+  "batch_size": 40,
+  "benchmark": "searchqa",
+  "condition": "attacked",
+  "config_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/configs/searchqa.yaml",
+  "config_sha256": "ff8e6b713e4fc1d6d15c02d93561334d2f1938da3bed08cb7aae6590c7b3a264",
+  "counts": {
+    "test": 700,
+    "train": 200,
+    "val": 100
+  },
+  "epochs": 4,
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "initial_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/db_delete/initial.md",
+  "initial_sha256": "1632781e198655e89eac19ae9b2fcff08f684c91592a3fa9eac8dc02ddfe3c23",
+  "model_identity": {
+    "alias": "Qwen3.5-9B",
+    "config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+    "repository": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "weight_index_sha256": "26d3539b516be613f39563617cb9d33b3f83d401298125be392c80cefb8f7fe5"
+  },
+  "optimizer_model_identity": {
+    "alias": "Qwen3.8-27B-FP8",
+    "config_sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+    "crc_manifest_sha256": "5ccb0f7436ae756484561fe915780509845f903ea1780dbe9b0a3a7a0dd095ac",
+    "repository": "Qwen/Qwen3.8-27B-FP8",
+    "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+    "weight_index_sha256": "f0838c766951bdfe76d6afbdb2771a8f67aaa2231dedb3d33cebd817729843a2"
+  },
+  "optimizer_serving_contract": {
+    "attention_backend": "TRITON_ATTN",
+    "disable_custom_all_reduce": true,
+    "dtype": "float16",
+    "enable_auto_tool_choice": true,
+    "enable_thinking": true,
+    "enforce_eager": true,
+    "gdn_prefill_backend": "triton",
+    "gpu_memory_utilization": 0.9,
+    "language_model_only": true,
+    "limit_mm_per_prompt": {
+      "image": 0,
+      "video": 0
+    },
+    "max_model_len": 65536,
+    "max_num_batched_tokens": 4096,
+    "max_num_seqs": 2,
+    "reasoning_effort": "medium",
+    "reasoning_parser": "qwen3",
+    "role": "optimizer",
+    "seed": 0,
+    "tensor_parallel_size": 2,
+    "tool_call_parser": "qwen3_coder",
+    "venv": "/work/tc442/venvs/qwen38",
+    "vllm_use_flashinfer_sampler": "0"
+  },
+  "output_root": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/db_delete",
+  "output_token_limit": 16384,
+  "payload_sha256": "a61efce0dc4ee5b567d1e85220164b930365e2bf3d4a7e40c732bd07a33dda78",
+  "rfinal_relative_path": "skills/skill_v0020.md",
+  "run_id": "searchqa__db_delete__q35t_q38o__seed_42",
+  "schema_version": 2,
+  "seed": 42,
+  "skillopt_revision": "9639719632daecacd1baaa47fe781f3c0253600a",
+  "slow_update_gate_with_selection": true,
+  "split_manifest_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa/split_manifest.json",
+  "split_manifest_sha256": "cdc7bd7b2ea32ecece1e044970a175900a056fec026b91ed6b26f8028d8bb33c",
+  "steps_per_epoch": 5,
+  "target_model_identity": {
+    "alias": "Qwen3.5-9B",
+    "config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+    "repository": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "weight_index_sha256": "26d3539b516be613f39563617cb9d33b3f83d401298125be392c80cefb8f7fe5"
+  },
+  "target_serving_contract": {
+    "attention_backend": "TRITON_ATTN",
+    "disable_custom_all_reduce": true,
+    "dtype": "float16",
+    "enable_auto_tool_choice": true,
+    "enable_thinking": true,
+    "enforce_eager": true,
+    "gdn_prefill_backend": "triton",
+    "gpu_memory_utilization": 0.95,
+    "language_model_only": false,
+    "limit_mm_per_prompt": {
+      "image": 1,
+      "video": 0
+    },
+    "max_model_len": 65536,
+    "max_num_batched_tokens": 2048,
+    "max_num_seqs": 4,
+    "mm_processor_kwargs": {
+      "max_pixels": 5242880
+    },
+    "reasoning_parser": "qwen3",
+    "role": "target",
+    "seed": 0,
+    "tensor_parallel_size": 1,
+    "tool_call_parser": "qwen3_coder",
+    "venv": "/work/tc442/venvs/qwen38",
+    "vllm_use_flashinfer_sampler": "0"
+  },
+  "thinking_enabled": true,
+  "total_steps": 20
+}

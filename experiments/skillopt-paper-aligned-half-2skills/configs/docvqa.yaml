@@ -1,0 +1,62 @@
+_base_: /work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/configs/docvqa/default.yaml
+
+model:
+  backend: qwen_chat
+  optimizer_backend: qwen_chat
+  target_backend: qwen_chat
+  optimizer: Qwen3.8-27B-FP8
+  target: Qwen3.5-9B
+  reasoning_effort: medium
+  qwen_chat_base_url: http://127.0.0.1:19351/v1
+  qwen_chat_api_key: dummy
+  qwen_chat_temperature: 0
+  qwen_chat_enable_thinking: true
+  optimizer_qwen_chat_base_url: http://127.0.0.1:19380/v1
+  optimizer_qwen_chat_api_key: dummy
+  optimizer_qwen_chat_temperature: 0
+  optimizer_qwen_chat_timeout_seconds: 1800
+  optimizer_qwen_chat_max_tokens: 16384
+  optimizer_qwen_chat_enable_thinking: true
+  target_qwen_chat_base_url: http://127.0.0.1:19351/v1
+  target_qwen_chat_api_key: dummy
+  target_qwen_chat_temperature: 0
+  target_qwen_chat_timeout_seconds: 1200
+  target_qwen_chat_max_tokens: 16384
+  target_qwen_chat_enable_thinking: true
+
+train:
+  num_epochs: 4
+  train_size: 54
+  batch_size: 40
+  accumulation: 1
+  seed: 42
+
+gradient:
+  minibatch_size: 8
+  merge_batch_size: 8
+  analyst_workers: 1
+  max_analyst_rounds: 3
+  failure_only: false
+
+optimizer:
+  slow_update_samples: 20
+  slow_update_gate_with_selection: true
+
+evaluation:
+  use_gate: true
+  gate_metric: hard
+  sel_env_num: 27
+  test_env_num: 187
+  eval_test: true
+
+env:
+  skill_init: null
+  split_mode: split_dir
+  split_dir: /work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/docvqa
+  split_seed: 42
+  max_turns: 1
+  max_completion_tokens: 16384
+  exec_timeout: 1200
+  workers: 4
+  image_detail: auto
+  limit: 0

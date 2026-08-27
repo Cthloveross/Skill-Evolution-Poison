@@ -1,0 +1,14 @@
+{
+  "attack": "file_delete",
+  "benchmark": "docvqa",
+  "bytes": 2437,
+  "condition": "attacked",
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "official_initial_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/envs/docvqa/skills/initial.md",
+  "official_initial_sha256": "60fa9bae90590a50970c9d5d33d92eaa412bf1fa380bd00c8343430202795d97",
+  "operation": "reused_payload_bytes + official_initial_bytes",
+  "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/docvqa/file_delete/initial.md",
+  "payload_path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/dymal-injections/file_delete/payload.md",
+  "schema_version": 2,
+  "sha256": "8f1b79c8eabf567ffa447504cb978751e5ef48df3968cbf626c181eb6386e061"
+}

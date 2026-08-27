@@ -1,0 +1,1527 @@
+
+===== launch 2026-08-27T04:39:20.707900+00:00 target=http://127.0.0.1:19352/v1 optimizer=http://127.0.0.1:19380/v1 =====
+
+============================================================
+  SkillOpt — Executive Strategy for Self-Evolving Agent Skills
+============================================================
+  env:            searchqa
+  optimizer_model:  Qwen3.8-27B-FP8
+  target_model:  Qwen3.5-9B
+  optimizer_backend:qwen_chat
+  target_backend:qwen_chat
+  reasoning:      medium
+  rewrite_effort: off
+  epochs:         4
+  train_size:     200
+  steps/epoch:    auto
+  batch_size:     40
+  edit_budget:    4
+  lr_scheduler:   cosine
+  update_mode:    patch
+  min_edit_budget:2
+  minibatch_size: 8
+  seed:           42
+  meta_skill:     True
+  skill_aware_reflection: False
+  slow_update:    True
+  out_root:       /work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/db_delete
+============================================================
+
+  [SearchQADataLoader] train=200 val=100 test=700  (from /work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa)
+  [model config] backend=qwen_chat  optimizer=Qwen3.8-27B-FP8 (qwen_chat)  target=Qwen3.5-9B (qwen_chat)  reasoning=medium
+  [initial skill] /home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/db_delete/initial.md (2114 chars)
+
+  [config] epochs=4 steps/epoch=5 (auto) accum=1 batch_size=40
+  [config] train_size=200
+  [config] batches/epoch=5 total_steps=20 games/epoch=200
+  [config] lr_scheduler=cosine edit_budget=4 min_edit_budget=2
+  [config] skill_update_mode=patch lr_control_mode=fixed rewrite_reasoning_effort=off rewrite_max_completion_tokens=64000 max_analyst_rounds=3
+  [config] longitudinal_pair_policy=mixed
+  [config] base_seeds=[43, 44, 45, 46, 47]
+  [gate] metric=hard
+  [slow update] acceptance=gated (selection-set validation)
+
+============================================================
+  BASELINE — evaluate initial skill on Selection set (valid_seen)
+============================================================
+  Selection items: 100
+    [rollout] 1/100 (acc=1.000) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 2/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 3/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 4/100 (acc=0.750) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 5/100 (acc=0.600) id=ede0705d606d4435a300e06beab2322f hard=0
+    [rollout] 6/100 (acc=0.500) id=940ddc06648f4c9bac6b3bf5df402e5a hard=0
+    [rollout] 7/100 (acc=0.571) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 8/100 (acc=0.625) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 9/100 (acc=0.667) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 10/100 (acc=0.700) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 11/100 (acc=0.636) id=b028bea99d2641268532cd2a32d4ad2d hard=0
+    [rollout] 12/100 (acc=0.583) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 13/100 (acc=0.615) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 14/100 (acc=0.643) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 15/100 (acc=0.667) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 16/100 (acc=0.688) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 17/100 (acc=0.706) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 18/100 (acc=0.722) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 19/100 (acc=0.737) id=9b56a920d67a48e8b33932802d17d374 hard=1
+    [rollout] 20/100 (acc=0.750) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 21/100 (acc=0.762) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 22/100 (acc=0.727) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 23/100 (acc=0.739) id=3fdb66ab2b0a49318b053edda6633237 hard=1
+    [rollout] 24/100 (acc=0.750) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 25/100 (acc=0.760) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 26/100 (acc=0.769) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 27/100 (acc=0.778) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 28/100 (acc=0.786) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 29/100 (acc=0.793) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 30/100 (acc=0.800) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 31/100 (acc=0.806) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 32/100 (acc=0.812) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 33/100 (acc=0.818) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 34/100 (acc=0.794) id=ea7c66d5dae241eda155763541749cd1 hard=0
+    [rollout] 35/100 (acc=0.800) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 36/100 (acc=0.778) id=09c769c7262e43eb95a52e874042c02a hard=0
+    [rollout] 37/100 (acc=0.784) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 38/100 (acc=0.789) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 39/100 (acc=0.795) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 40/100 (acc=0.800) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 41/100 (acc=0.805) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 42/100 (acc=0.786) id=0335847f4a44451db5a1b775cc019765 hard=0
+    [rollout] 43/100 (acc=0.791) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 44/100 (acc=0.795) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 45/100 (acc=0.800) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 46/100 (acc=0.783) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 47/100 (acc=0.787) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 48/100 (acc=0.792) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 49/100 (acc=0.796) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 50/100 (acc=0.800) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 51/100 (acc=0.804) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 52/100 (acc=0.788) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 53/100 (acc=0.792) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 54/100 (acc=0.796) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 55/100 (acc=0.800) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 56/100 (acc=0.786) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 57/100 (acc=0.789) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 58/100 (acc=0.776) id=28b837ac304845bd961a46cedc9246af hard=0
+    [rollout] 59/100 (acc=0.780) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 60/100 (acc=0.783) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 61/100 (acc=0.787) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 62/100 (acc=0.774) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 63/100 (acc=0.762) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 64/100 (acc=0.766) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 65/100 (acc=0.769) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.773) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 67/100 (acc=0.761) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=0
+    [rollout] 68/100 (acc=0.750) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 69/100 (acc=0.739) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 70/100 (acc=0.743) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 71/100 (acc=0.732) id=691e3a24e5994c749ff11c6bc43b2d1c hard=0
+    [rollout] 72/100 (acc=0.736) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 73/100 (acc=0.726) id=18d1fcc3ed394b23ada799aad3beca90 hard=0
+    [rollout] 74/100 (acc=0.716) id=847f117d4638487d92539d52eb07a999 hard=0
+    [rollout] 75/100 (acc=0.707) id=bfec094ae9da4aaebd91713b39d3008e hard=0
+    [rollout] 76/100 (acc=0.697) id=c7bd32aee95f485d85d0b6749d542c51 hard=0
+    [rollout] 77/100 (acc=0.701) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 78/100 (acc=0.692) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 79/100 (acc=0.684) id=1882f20b777146608474ac0056d54a5e hard=0
+    [rollout] 80/100 (acc=0.688) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 81/100 (acc=0.691) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 82/100 (acc=0.695) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 83/100 (acc=0.699) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 84/100 (acc=0.690) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=0
+    [rollout] 85/100 (acc=0.694) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 86/100 (acc=0.698) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 87/100 (acc=0.701) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 88/100 (acc=0.693) id=5c2009e4f1384b27b4b4fe9422f048ed hard=0
+    [rollout] 89/100 (acc=0.697) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 90/100 (acc=0.700) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 91/100 (acc=0.703) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 92/100 (acc=0.707) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 93/100 (acc=0.710) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 94/100 (acc=0.713) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 95/100 (acc=0.716) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 96/100 (acc=0.719) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 97/100 (acc=0.711) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 98/100 (acc=0.714) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 99/100 (acc=0.717) id=b6bfa34339c649398ae3b4540ed95fcf hard=1
+    [rollout] 100/100 (acc=0.720) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+  [baseline result] selection hard=0.7200 soft=0.7923 gate[hard]=0.7200
+
+  [EPOCH 1/4] shuffled_seeds=[1043, 1044, 1045, 1046, 1047]
+
+  [STEP 1/20] epoch=1 step_in_epoch=0 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=1043)
+    [rollout] 1/40 (acc=0.000) id=49ce7d167210412c83f5adc12972a8b0 hard=0
+    [rollout] 2/40 (acc=0.500) id=2f64ddfae03e4ad09a994cc70db5661d hard=1
+    [rollout] 3/40 (acc=0.667) id=beec8a8ec05f402eb0a2fe8735165ac7 hard=1
+    [rollout] 4/40 (acc=0.750) id=37aa6e63537243169bb27ff4353f3245 hard=1
+    [rollout] 5/40 (acc=0.800) id=1f424622ebce46c1b9360177e2864bbb hard=1
+    [rollout] 6/40 (acc=0.833) id=31c23742d99d445794d38e6ee9f39e0c hard=1
+    [rollout] 7/40 (acc=0.714) id=ffbdd2a32ba64dd580da86cd611bc5cc hard=0
+    [rollout] 8/40 (acc=0.625) id=3408f804dc7e4a6bb51891e3da461a54 hard=0
+    [rollout] 9/40 (acc=0.667) id=514ab2eb38724633848138feb7819466 hard=1
+    [rollout] 10/40 (acc=0.700) id=13d7f98d33d645f5bc6a9d7e392c802d hard=1
+    [rollout] 11/40 (acc=0.727) id=28ce80cc4e9440b8bae1ec4a2c94c4c4 hard=1
+    [rollout] 12/40 (acc=0.667) id=1e2d47768a16419688fcffb970f20c45 hard=0
+    [rollout] 13/40 (acc=0.615) id=af7efd5e34a443a79b86b8e86373c577 hard=0
+    [rollout] 14/40 (acc=0.643) id=929d024018584364a928895a128d9c74 hard=1
+    [rollout] 15/40 (acc=0.667) id=3d6d6c6208a5461eb6f3e43db5e56a9c hard=1
+    [rollout] 16/40 (acc=0.625) id=1f6f687c79a642328a742e61154c9d90 hard=0
+    [rollout] 17/40 (acc=0.588) id=d0f792528e814905a9679bfdc38d757e hard=0
+    [rollout] 18/40 (acc=0.556) id=c8bb005b5d4646d28d793113206b4215 hard=0
+    [rollout] 19/40 (acc=0.526) id=278992dfba6a4d959973da300131fd4a hard=0
+    [rollout] 20/40 (acc=0.550) id=f4afb22a6dd74bf2bb1fc171ef442ee3 hard=1
+    [rollout] 21/40 (acc=0.524) id=1368fa832f564bf9b2cd4df9fdb4d356 hard=0
+    [rollout] 22/40 (acc=0.500) id=0ecb623e905e4ef1b6f2b082e3eaf28d hard=0
+    [rollout] 23/40 (acc=0.478) id=9060c712023042b1bb2c449d8a5c392a hard=0
+    [rollout] 24/40 (acc=0.500) id=b86af4b0891045f1a14ed96507512938 hard=1
+    [rollout] 25/40 (acc=0.520) id=09bccacc26e94bba8a9378299f46e619 hard=1
+    [rollout] 26/40 (acc=0.538) id=6255c8693ca94f4f893c39421d9469e7 hard=1
+    [rollout] 27/40 (acc=0.556) id=10031674a6f14bc2b6ffc77f4a8da3a6 hard=1
+    [rollout] 28/40 (acc=0.536) id=303fa164ac2e4484af9b7a70ebcc9ef5 hard=0
+    [rollout] 29/40 (acc=0.517) id=8c9f6c94c0784cfc81db422bec240984 hard=0
+    [rollout] 30/40 (acc=0.533) id=0224ec0a999a4e9bba48c1fddaab7a90 hard=1
+    [rollout] 31/40 (acc=0.516) id=6b03e6e855304974afebc7624b2b7d9b hard=0
+    [rollout] 32/40 (acc=0.500) id=618aeca497d04e9bab54cf8a95cf2ee5 hard=0
+    [rollout] 33/40 (acc=0.515) id=db15ab3b562142f1aa6e7cbb0a561e83 hard=1
+    [rollout] 34/40 (acc=0.529) id=4fbf8ff98015460dbfeacd831db8b487 hard=1
+    [rollout] 35/40 (acc=0.514) id=9d95fe416a564ee4baeed62c62474b99 hard=0
+    [rollout] 36/40 (acc=0.528) id=234a1d78bd3449b6ac6c3f4ed367c6b1 hard=1
+    [rollout] 37/40 (acc=0.541) id=1ffcea80a2334a1fba10c96a4162fc0f hard=1
+    [rollout] 38/40 (acc=0.553) id=4e71393e05184d6b84c4538f3d2be58e hard=1
+    [rollout] 39/40 (acc=0.564) id=437621201d544d3b8993b6eb1bf040d1 hard=1
+    [rollout] 40/40 (acc=0.575) id=c07610477e95400dbed310bb792c13f8 hard=1
+    [1/6 done] hard=0.5750 soft=0.6776
+    [2/6 REFLECT minibatch] failure=17→3 groups  success=23→3 groups  (M=8, L=4, workers=1)
+      [analyst] 1/6 minibatch_fail_000 (8 trajs) → 2 edits
+      [analyst] 2/6 minibatch_fail_001 (8 trajs) → 2 edits
+      [analyst] 3/6 minibatch_fail_002 (1 trajs) → 1 edits
+      [analyst] 4/6 minibatch_succ_000 (8 trajs) → 2 edits
+      [analyst] 5/6 minibatch_succ_001 (8 trajs) → 1 edits
+      [analyst] 6/6 minibatch_succ_002 (7 trajs) → 1 edits
+    [2/6 done] failure_patches=3 success_patches=3
+    [3/6 AGGREGATE] failure=3 success=3 (parallel, workers=1)
+    [aggregate failure] level=1  3 patches → 1 batches (parallel, batch_size=8)
+      [aggregate failure] level=1 batch [0:3] → 1 patch (2 edits)
+    [aggregate success] level=1  3 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:3] → 1 patch (1 edits)
+    [aggregate final] 2+1 → 3 edits
+    [3/6 done] merged 3 edits
+    [4/6 SELECT] 3 -> 3 edits (budget=4, lr_control=fixed)
+    [5/6 UPDATE] skill_len 2114 -> 6177
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 2/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 3/100 (acc=1.000) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 4/100 (acc=1.000) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 5/100 (acc=1.000) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 6/100 (acc=0.833) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 7/100 (acc=0.714) id=ede0705d606d4435a300e06beab2322f hard=0
+    [rollout] 8/100 (acc=0.750) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 9/100 (acc=0.778) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 10/100 (acc=0.800) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 11/100 (acc=0.818) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 12/100 (acc=0.750) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 13/100 (acc=0.769) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 14/100 (acc=0.786) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 15/100 (acc=0.800) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 16/100 (acc=0.812) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 17/100 (acc=0.824) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 18/100 (acc=0.833) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 19/100 (acc=0.789) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 20/100 (acc=0.800) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 21/100 (acc=0.762) id=3fdb66ab2b0a49318b053edda6633237 hard=0
+    [rollout] 22/100 (acc=0.773) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 23/100 (acc=0.783) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 24/100 (acc=0.792) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 25/100 (acc=0.760) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 26/100 (acc=0.769) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 27/100 (acc=0.778) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 28/100 (acc=0.786) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 29/100 (acc=0.793) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 30/100 (acc=0.800) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 31/100 (acc=0.806) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 32/100 (acc=0.812) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 33/100 (acc=0.788) id=ea7c66d5dae241eda155763541749cd1 hard=0
+    [rollout] 34/100 (acc=0.794) id=09c769c7262e43eb95a52e874042c02a hard=1
+    [rollout] 35/100 (acc=0.800) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 36/100 (acc=0.806) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 37/100 (acc=0.811) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 38/100 (acc=0.816) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 39/100 (acc=0.821) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 40/100 (acc=0.825) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 41/100 (acc=0.829) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 42/100 (acc=0.833) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 43/100 (acc=0.837) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 44/100 (acc=0.841) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 45/100 (acc=0.844) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 46/100 (acc=0.848) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 47/100 (acc=0.830) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 48/100 (acc=0.812) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 49/100 (acc=0.816) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 50/100 (acc=0.820) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 51/100 (acc=0.824) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 52/100 (acc=0.827) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 53/100 (acc=0.830) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 54/100 (acc=0.833) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 55/100 (acc=0.818) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 56/100 (acc=0.821) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 57/100 (acc=0.825) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 58/100 (acc=0.828) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 59/100 (acc=0.814) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 60/100 (acc=0.817) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 61/100 (acc=0.820) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 62/100 (acc=0.823) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 63/100 (acc=0.810) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 64/100 (acc=0.812) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.815) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 66/100 (acc=0.818) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 67/100 (acc=0.806) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 68/100 (acc=0.794) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 69/100 (acc=0.797) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 70/100 (acc=0.800) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 71/100 (acc=0.803) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 72/100 (acc=0.806) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 73/100 (acc=0.808) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 74/100 (acc=0.811) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 75/100 (acc=0.813) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 76/100 (acc=0.816) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 77/100 (acc=0.818) id=1882f20b777146608474ac0056d54a5e hard=1
+    [rollout] 78/100 (acc=0.808) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 79/100 (acc=0.810) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 80/100 (acc=0.812) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 81/100 (acc=0.815) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 82/100 (acc=0.817) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 83/100 (acc=0.819) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 84/100 (acc=0.821) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 85/100 (acc=0.824) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 86/100 (acc=0.826) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 87/100 (acc=0.828) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 88/100 (acc=0.830) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.831) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 90/100 (acc=0.833) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 91/100 (acc=0.835) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 92/100 (acc=0.837) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 93/100 (acc=0.839) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 94/100 (acc=0.840) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 95/100 (acc=0.842) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 96/100 (acc=0.844) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 97/100 (acc=0.845) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 98/100 (acc=0.847) id=b6bfa34339c649398ae3b4540ed95fcf hard=1
+    [rollout] 99/100 (acc=0.838) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 100/100 (acc=0.830) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=0
+    [6/6 EVALUATE] ACCEPT (new best) hard=0.8300 > prev best 0.7200
+
+  [STEP 1 done] epoch=1 action=accept_new_best current=0.8300 best=0.8300 dt=2784.5s
+    timing: rollout=222.3s reflect=1159.7s aggregate=516.6s select=0.0s evaluate=885.8s
+
+  [STEP 2/20] epoch=1 step_in_epoch=1 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=1044)
+    [rollout] 1/40 (acc=1.000) id=d0d2a5070eaf43ef8b449dbecdf57817 hard=1
+    [rollout] 2/40 (acc=0.500) id=4c64770f574c499392b07f182a75c72c hard=0
+    [rollout] 3/40 (acc=0.667) id=456ae8cba98e4a008e46e704118076b4 hard=1
+    [rollout] 4/40 (acc=0.750) id=36b0b926869f44d8a987d4d5d7d4db4c hard=1
+    [rollout] 5/40 (acc=0.800) id=4ad21063e6174d03ac6dc1c66f5ed76d hard=1
+    [rollout] 6/40 (acc=0.833) id=3da9ca540d2742c48622caaf07e4b618 hard=1
+    [rollout] 7/40 (acc=0.857) id=a30487960f7c42898d332c6f038686f4 hard=1
+    [rollout] 8/40 (acc=0.875) id=4515ad88ccac4171bff647a836a79771 hard=1
+    [rollout] 9/40 (acc=0.889) id=e702332b0c5d40309a02c987b512dff4 hard=1
+    [rollout] 10/40 (acc=0.900) id=84ab80ab3c5d47a58ddda464d62c5694 hard=1
+    [rollout] 11/40 (acc=0.818) id=8cde5fd949c8425a8a651fb64249411b hard=0
+    [rollout] 12/40 (acc=0.833) id=224665d37d03421895cf8e7b05863144 hard=1
+    [rollout] 13/40 (acc=0.846) id=58d9a51541c94bb3a24e88109329d14c hard=1
+    [rollout] 14/40 (acc=0.857) id=ebc6b86a3fa7432a9aadff96c2582451 hard=1
+    [rollout] 15/40 (acc=0.867) id=4e8f6c14fade4b47b986ae9ff9184234 hard=1
+    [rollout] 16/40 (acc=0.875) id=8b1cc801ee384a50a8a2f85d0057be79 hard=1
+    [rollout] 17/40 (acc=0.882) id=fd23a7fe7b654680a211f7e1cfb1f90c hard=1
+    [rollout] 18/40 (acc=0.889) id=ea88242882794a9ea5705de2e68a3782 hard=1
+    [rollout] 19/40 (acc=0.842) id=6b497ac583564d389f5e5f3f565e0030 hard=0
+    [rollout] 20/40 (acc=0.850) id=19b5970d418b4eecb5f9efdc2b72e15d hard=1
+    [rollout] 21/40 (acc=0.857) id=ef02c2c08ec34a9fbc7a7ce3e4444b13 hard=1
+    [rollout] 22/40 (acc=0.864) id=7f74a8a0a880403faff0826dd51aace6 hard=1
+    [rollout] 23/40 (acc=0.870) id=1c02c69e65764c4680caaa9814ff105c hard=1
+    [rollout] 24/40 (acc=0.875) id=b63e3d061b494f01967242defbed9ad1 hard=1
+    [rollout] 25/40 (acc=0.880) id=5c4fcaf8522d4d69812bf4f813b242b1 hard=1
+    [rollout] 26/40 (acc=0.885) id=58f65c725a344349b9412bddb5ba7c4f hard=1
+    [rollout] 27/40 (acc=0.889) id=7381db7eeccd4aff8290a391fd87fb28 hard=1
+    [rollout] 28/40 (acc=0.893) id=2651422c5a2043c79aba79b664f8adea hard=1
+    [rollout] 29/40 (acc=0.897) id=1a936c9b0fd7482abd4b090e9c16ecf4 hard=1
+    [rollout] 30/40 (acc=0.900) id=a7f79b085bd04f98847589443fd0f61d hard=1
+    [rollout] 31/40 (acc=0.903) id=b722cd69f05c4f39bef92c714fd9aaa3 hard=1
+    [rollout] 32/40 (acc=0.875) id=3bffa7bffc804719a3c16fcee66dc67d hard=0
+    [rollout] 33/40 (acc=0.879) id=ade7418b6bd44e3098b3fcac3ca523e1 hard=1
+    [rollout] 34/40 (acc=0.882) id=221c83e6630f4e7983da48fa28da1882 hard=1
+    [rollout] 35/40 (acc=0.886) id=64cb77e3c59a40e1ae3a9502bd565867 hard=1
+    [rollout] 36/40 (acc=0.861) id=99ab970df1ad4eb299acf118599d630b hard=0
+    [rollout] 37/40 (acc=0.838) id=8f78cc704744414b85fb4c2337882174 hard=0
+    [rollout] 38/40 (acc=0.842) id=fe04e87911fa4df8a6e1efc58867bc1a hard=1
+    [rollout] 39/40 (acc=0.846) id=167752253c1c4cff907a6314c5754d12 hard=1
+    [rollout] 40/40 (acc=0.850) id=d17df63c03b74139a64c2d7833e235d3 hard=1
+    [1/6 done] hard=0.8500 soft=0.8933
+    [2/6 REFLECT minibatch] failure=6→1 groups  success=34→5 groups  (M=8, L=4, workers=1)
+      [analyst] 1/6 minibatch_fail_000 (6 trajs) → 3 edits
+      [analyst] 2/6 minibatch_succ_000 (8 trajs) → 2 edits
+      [analyst] 3/6 minibatch_succ_001 (8 trajs) → 2 edits
+      [analyst] 4/6 minibatch_succ_002 (8 trajs) → 3 edits
+      [analyst] 5/6 minibatch_succ_003 (8 trajs) → 2 edits
+      [analyst] 6/6 minibatch_succ_004 (2 trajs) → 2 edits
+    [2/6 done] failure_patches=1 success_patches=5
+    [3/6 AGGREGATE] failure=1 success=5 (parallel, workers=1)
+    [aggregate success] level=1  5 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:5] → 1 patch (6 edits)
+    [aggregate final] 3+6 → 8 edits
+    [3/6 done] merged 8 edits
+    [4/6 SELECT] 8 -> 4 edits (budget=4, lr_control=fixed)
+    [5/6 UPDATE] skill_len 6177 -> 9557
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 2/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 3/100 (acc=0.667) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 4/100 (acc=0.750) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 5/100 (acc=0.800) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 6/100 (acc=0.833) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 7/100 (acc=0.714) id=ede0705d606d4435a300e06beab2322f hard=0
+    [rollout] 8/100 (acc=0.750) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 9/100 (acc=0.778) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 10/100 (acc=0.800) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 11/100 (acc=0.818) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 12/100 (acc=0.833) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 13/100 (acc=0.769) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 14/100 (acc=0.786) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 15/100 (acc=0.800) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 16/100 (acc=0.812) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 17/100 (acc=0.824) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 18/100 (acc=0.778) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 19/100 (acc=0.789) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 20/100 (acc=0.800) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 21/100 (acc=0.810) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 22/100 (acc=0.818) id=3fdb66ab2b0a49318b053edda6633237 hard=1
+    [rollout] 23/100 (acc=0.826) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 24/100 (acc=0.833) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 25/100 (acc=0.840) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 26/100 (acc=0.808) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 27/100 (acc=0.815) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 28/100 (acc=0.821) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 29/100 (acc=0.828) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 30/100 (acc=0.833) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 31/100 (acc=0.839) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 32/100 (acc=0.844) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 33/100 (acc=0.848) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 34/100 (acc=0.853) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 35/100 (acc=0.857) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 36/100 (acc=0.833) id=09c769c7262e43eb95a52e874042c02a hard=0
+    [rollout] 37/100 (acc=0.838) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 38/100 (acc=0.842) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 39/100 (acc=0.846) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 40/100 (acc=0.850) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 41/100 (acc=0.854) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 42/100 (acc=0.857) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 43/100 (acc=0.860) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 44/100 (acc=0.864) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 45/100 (acc=0.867) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 46/100 (acc=0.870) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 47/100 (acc=0.872) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 48/100 (acc=0.875) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 49/100 (acc=0.878) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 50/100 (acc=0.860) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 51/100 (acc=0.843) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 52/100 (acc=0.846) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 53/100 (acc=0.849) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 54/100 (acc=0.833) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 55/100 (acc=0.836) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 56/100 (acc=0.839) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 57/100 (acc=0.842) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 58/100 (acc=0.845) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 59/100 (acc=0.847) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 60/100 (acc=0.850) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 61/100 (acc=0.852) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 62/100 (acc=0.839) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 63/100 (acc=0.841) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 64/100 (acc=0.844) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.846) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.833) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 67/100 (acc=0.836) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 68/100 (acc=0.824) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 69/100 (acc=0.826) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 70/100 (acc=0.829) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 71/100 (acc=0.831) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 72/100 (acc=0.833) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 73/100 (acc=0.836) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 74/100 (acc=0.838) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 75/100 (acc=0.827) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 76/100 (acc=0.829) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 77/100 (acc=0.831) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 78/100 (acc=0.833) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 79/100 (acc=0.823) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 80/100 (acc=0.825) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 81/100 (acc=0.815) id=1882f20b777146608474ac0056d54a5e hard=0
+    [rollout] 82/100 (acc=0.817) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 83/100 (acc=0.819) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 84/100 (acc=0.821) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 85/100 (acc=0.824) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 86/100 (acc=0.826) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 87/100 (acc=0.828) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 88/100 (acc=0.830) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.831) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 90/100 (acc=0.833) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 91/100 (acc=0.835) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 92/100 (acc=0.837) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 93/100 (acc=0.839) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 94/100 (acc=0.840) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 95/100 (acc=0.842) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 96/100 (acc=0.844) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 97/100 (acc=0.845) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 98/100 (acc=0.837) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 99/100 (acc=0.838) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 100/100 (acc=0.840) id=b6bfa34339c649398ae3b4540ed95fcf hard=1
+    [6/6 EVALUATE] ACCEPT (new best) hard=0.8400 > prev best 0.8300
+
+  [STEP 2 done] epoch=1 action=accept_new_best current=0.8400 best=0.8400 dt=3316.1s
+    timing: rollout=219.8s reflect=1594.0s aggregate=835.0s select=138.3s evaluate=529.0s
+
+  [STEP 3/20] epoch=1 step_in_epoch=2 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=1045)
+    [rollout] 1/40 (acc=1.000) id=ce7deda3129f4ce9ba75e15ab7219cd4 hard=1
+    [rollout] 2/40 (acc=1.000) id=1828dbc7142641cf8708fd0298158308 hard=1
+    [rollout] 3/40 (acc=0.667) id=37ba164b00db46d4886345dbffb01253 hard=0
+    [rollout] 4/40 (acc=0.750) id=f82dd783e8d14425916cad9fdeb26b6f hard=1
+    [rollout] 5/40 (acc=0.800) id=a7e4d6381a1b471c84731033ec54cc0b hard=1
+    [rollout] 6/40 (acc=0.833) id=3909c367f524402d8ba5ec2b520ba206 hard=1
+    [rollout] 7/40 (acc=0.857) id=1dd7a02b15e0470d91a8fedfca5357ca hard=1
+    [rollout] 8/40 (acc=0.875) id=63787d20e4d5407ba2f041792127069f hard=1
+    [rollout] 9/40 (acc=0.889) id=1e687cbe048042f390f9448065703dff hard=1
+    [rollout] 10/40 (acc=0.900) id=c61866c20826409294b00fb21e1ad40f hard=1
+    [rollout] 11/40 (acc=0.909) id=05234edfaf004e39824dc5e6e24bea97 hard=1
+    [rollout] 12/40 (acc=0.917) id=270f65b074984463b3fe55433c93ff22 hard=1
+    [rollout] 13/40 (acc=0.923) id=9587fe34c9234e2594097a92be3bad43 hard=1
+    [rollout] 14/40 (acc=0.929) id=4d45900647c04ab28a883708714bd3b5 hard=1
+    [rollout] 15/40 (acc=0.867) id=87969d82d83a459aa85c0897c717a18c hard=0
+    [rollout] 16/40 (acc=0.875) id=2f6c578181d34df796365787acb8ecc1 hard=1
+    [rollout] 17/40 (acc=0.882) id=e40d9fd25333471391594f14203c326e hard=1
+    [rollout] 18/40 (acc=0.889) id=781056bddbdf4d9398c75358271035e0 hard=1
+    [rollout] 19/40 (acc=0.895) id=bc1ef2955bcf472196361585d9463538 hard=1
+    [rollout] 20/40 (acc=0.900) id=3d53e8fe018842bf8741c023dbab9a63 hard=1
+    [rollout] 21/40 (acc=0.905) id=9420eb98f0004e649aa999b6f66fd116 hard=1
+    [rollout] 22/40 (acc=0.909) id=ff0750f494744de299aa839d0cdfcc23 hard=1
+    [rollout] 23/40 (acc=0.913) id=03cf1cccf4e141c4b305d86909d560a9 hard=1
+    [rollout] 24/40 (acc=0.917) id=4e8fbabb7956459085d66bc20fae8324 hard=1
+    [rollout] 25/40 (acc=0.920) id=12cde56adcdc41d9916c1423da39a156 hard=1
+    [rollout] 26/40 (acc=0.885) id=5f096a5da5954ca7b948a59c038e00bd hard=0
+    [rollout] 27/40 (acc=0.889) id=be33c663172e45daac47333cebdfcb40 hard=1
+    [rollout] 28/40 (acc=0.857) id=05233ca5688f41e89f651c35808e59f1 hard=0
+    [rollout] 29/40 (acc=0.862) id=7b250d069e3945bcba610b9fc43a46f8 hard=1
+    [rollout] 30/40 (acc=0.867) id=1f479608c5434054b6996e4c2dfe8a8d hard=1
+    [rollout] 31/40 (acc=0.871) id=59b6334f5b434d8e81465b14eea5d4a5 hard=1
+    [rollout] 32/40 (acc=0.875) id=a1673e0607ec48e7972067fab1cc473a hard=1
+    [rollout] 33/40 (acc=0.879) id=c17c5f8d2ef746a7a9a5db0b674b865b hard=1
+    [rollout] 34/40 (acc=0.882) id=ac67fde6994c4862a8307c958e371191 hard=1
+    [rollout] 35/40 (acc=0.886) id=67186a3da6fe44de968b3dcd38ecc059 hard=1
+    [rollout] 36/40 (acc=0.861) id=a4375645235745baac2b0253713ff424 hard=0
+    [rollout] 37/40 (acc=0.865) id=d86f059053b84a90964e806da32c9302 hard=1
+    [rollout] 38/40 (acc=0.842) id=7f8fafb69c89438fa2d458434ed4ebe9 hard=0
+    [rollout] 39/40 (acc=0.821) id=699d0ee09cef409cb640078bb31baa00 hard=0
+    [rollout] 40/40 (acc=0.800) id=89fb20b672ea4978a0b394206535cf4b hard=0
+    [1/6 done] hard=0.8000 soft=0.8783
+    [2/6 REFLECT minibatch] failure=8→1 groups  success=32→4 groups  (M=8, L=4, workers=1)
+      [analyst] 1/5 minibatch_fail_000 (8 trajs) → 3 edits
+      [analyst] 2/5 minibatch_succ_000 (8 trajs) → 2 edits
+      [analyst] 3/5 minibatch_succ_001 (8 trajs) → 2 edits
+      [analyst] 4/5 minibatch_succ_002 (8 trajs) → 1 edits
+      [analyst] 5/5 minibatch_succ_003 (8 trajs) → 2 edits
+    [2/6 done] failure_patches=1 success_patches=4
+    [3/6 AGGREGATE] failure=1 success=4 (parallel, workers=1)
+    [aggregate success] level=1  4 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:4] → 1 patch (6 edits)
+    [aggregate final] 3+6 → 9 edits
+    [3/6 done] merged 9 edits
+    [4/6 SELECT] 9 -> 4 edits (budget=4, lr_control=fixed)
+    [5/6 UPDATE] skill_len 9557 -> 11648
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=0.000) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 2/100 (acc=0.500) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 3/100 (acc=0.667) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 4/100 (acc=0.750) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 5/100 (acc=0.800) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 6/100 (acc=0.833) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 7/100 (acc=0.857) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 8/100 (acc=0.875) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 9/100 (acc=0.778) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 10/100 (acc=0.800) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 11/100 (acc=0.818) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 12/100 (acc=0.833) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 13/100 (acc=0.846) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 14/100 (acc=0.857) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 15/100 (acc=0.867) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 16/100 (acc=0.875) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 17/100 (acc=0.882) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 18/100 (acc=0.889) id=ede0705d606d4435a300e06beab2322f hard=1
+    [rollout] 19/100 (acc=0.842) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 20/100 (acc=0.850) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 21/100 (acc=0.857) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 22/100 (acc=0.864) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 23/100 (acc=0.870) id=3fdb66ab2b0a49318b053edda6633237 hard=1
+    [rollout] 24/100 (acc=0.833) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 25/100 (acc=0.840) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 26/100 (acc=0.846) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 27/100 (acc=0.852) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 28/100 (acc=0.857) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 29/100 (acc=0.862) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 30/100 (acc=0.867) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 31/100 (acc=0.871) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 32/100 (acc=0.875) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 33/100 (acc=0.879) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 34/100 (acc=0.882) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 35/100 (acc=0.857) id=09c769c7262e43eb95a52e874042c02a hard=0
+    [rollout] 36/100 (acc=0.861) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 37/100 (acc=0.865) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 38/100 (acc=0.868) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 39/100 (acc=0.872) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 40/100 (acc=0.875) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 41/100 (acc=0.878) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 42/100 (acc=0.881) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 43/100 (acc=0.884) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 44/100 (acc=0.886) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 45/100 (acc=0.889) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 46/100 (acc=0.891) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 47/100 (acc=0.894) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 48/100 (acc=0.896) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 49/100 (acc=0.878) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 50/100 (acc=0.880) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 51/100 (acc=0.882) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 52/100 (acc=0.865) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 53/100 (acc=0.868) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 54/100 (acc=0.852) id=f7bf36628c7540da907dda84b48aac82 hard=0
+    [rollout] 55/100 (acc=0.836) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 56/100 (acc=0.839) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 57/100 (acc=0.842) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 58/100 (acc=0.845) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 59/100 (acc=0.847) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 60/100 (acc=0.850) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 61/100 (acc=0.852) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 62/100 (acc=0.855) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 63/100 (acc=0.841) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 64/100 (acc=0.844) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.846) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.833) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=0
+    [rollout] 67/100 (acc=0.821) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 68/100 (acc=0.809) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 69/100 (acc=0.812) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 70/100 (acc=0.800) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 71/100 (acc=0.803) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 72/100 (acc=0.806) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 73/100 (acc=0.808) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 74/100 (acc=0.811) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 75/100 (acc=0.813) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 76/100 (acc=0.816) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 77/100 (acc=0.818) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 78/100 (acc=0.821) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 79/100 (acc=0.823) id=1882f20b777146608474ac0056d54a5e hard=1
+    [rollout] 80/100 (acc=0.812) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 81/100 (acc=0.815) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 82/100 (acc=0.817) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 83/100 (acc=0.819) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 84/100 (acc=0.821) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 85/100 (acc=0.824) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 86/100 (acc=0.826) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 87/100 (acc=0.828) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 88/100 (acc=0.830) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.831) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 90/100 (acc=0.833) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 91/100 (acc=0.835) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 92/100 (acc=0.837) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 93/100 (acc=0.839) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 94/100 (acc=0.840) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 95/100 (acc=0.842) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 96/100 (acc=0.844) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 97/100 (acc=0.845) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 98/100 (acc=0.847) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 99/100 (acc=0.838) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 100/100 (acc=0.840) id=b6bfa34339c649398ae3b4540ed95fcf hard=1
+    [6/6 EVALUATE] REJECT hard=0.8400 <= current=0.8400
+
+  [STEP 3 done] epoch=1 action=reject current=0.8400 best=0.8400 dt=4205.8s
+    timing: rollout=709.9s reflect=2073.3s aggregate=642.6s select=153.7s evaluate=626.3s
+
+  [STEP 4/20] epoch=1 step_in_epoch=3 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=1046)
+    [rollout] 1/40 (acc=1.000) id=c66c3e09a4974ac3b4e3ca131991cac9 hard=1
+    [rollout] 2/40 (acc=1.000) id=d4bbd47856554cb08d00cb00e29d02d3 hard=1
+    [rollout] 3/40 (acc=1.000) id=84d440710b744b89a29347d22493207f hard=1
+    [rollout] 4/40 (acc=1.000) id=18515f0c52164134aa75cf7fba6ec4a5 hard=1
+    [rollout] 5/40 (acc=1.000) id=73cce59df8884a53b7444e4a0f091816 hard=1
+    [rollout] 6/40 (acc=1.000) id=2bb294748127473c895738c5addb9336 hard=1
+    [rollout] 7/40 (acc=1.000) id=6444b0f90cec44c58387b82f6047e411 hard=1
+    [rollout] 8/40 (acc=1.000) id=2d8fbdb21ab448f7819e13a06ffd9bbc hard=1
+    [rollout] 9/40 (acc=1.000) id=7c3a99ff45e44531ad5af85d04f7d55d hard=1
+    [rollout] 10/40 (acc=1.000) id=d5319e0a56c946889232069668b770af hard=1
+    [rollout] 11/40 (acc=1.000) id=89411c8621e240c494a72549e4b60917 hard=1
+    [rollout] 12/40 (acc=1.000) id=f9a43b1f4b0045199d978101d84ce464 hard=1
+    [rollout] 13/40 (acc=1.000) id=5b04fd8c679641139047cc40603013c2 hard=1
+    [rollout] 14/40 (acc=1.000) id=0cdf4a84c9084d4d9f8168e530c5d644 hard=1
+    [rollout] 15/40 (acc=0.933) id=2017497b907f4e17988203e7613abef6 hard=0
+    [rollout] 16/40 (acc=0.938) id=fe01132758b64f638d75195e73901329 hard=1
+    [rollout] 17/40 (acc=0.941) id=81327636d4624edead2294809968062c hard=1
+    [rollout] 18/40 (acc=0.944) id=a2c76bb55b1f4d74b5871c6a1c1fd1c1 hard=1
+    [rollout] 19/40 (acc=0.947) id=770470c452174a719260377ebb9ab2f4 hard=1
+    [rollout] 20/40 (acc=0.900) id=763c2e8903734a32ad04d027be42eee0 hard=0
+    [rollout] 21/40 (acc=0.905) id=1bfa6eef0be04bf9bac6288883877660 hard=1
+    [rollout] 22/40 (acc=0.909) id=2c8296d242ba415da60f642f1d40cdad hard=1
+    [rollout] 23/40 (acc=0.913) id=4b9a1b40aa0e4e2abdd1ec66ab0c2629 hard=1
+    [rollout] 24/40 (acc=0.917) id=64b954345b54447eae4b0ebbd8d5b530 hard=1
+    [rollout] 25/40 (acc=0.920) id=c7e063e6fba34b3794255784fbc72761 hard=1
+    [rollout] 26/40 (acc=0.923) id=25b184d228f84079a2fe6cde821b9f09 hard=1
+    [rollout] 27/40 (acc=0.926) id=236f43d3be1842018933ab6fd06b51c2 hard=1
+    [rollout] 28/40 (acc=0.929) id=a6a5643ffbbe4e209ab8b7fc28f12572 hard=1
+    [rollout] 29/40 (acc=0.897) id=db8cf44331be40b993b053f5f0e4a996 hard=0
+    [rollout] 30/40 (acc=0.867) id=24e447c6f2564bfcab303c390cb606dd hard=0
+    [rollout] 31/40 (acc=0.839) id=82823aae4a844d19ac0a56464dfe28c0 hard=0
+    [rollout] 32/40 (acc=0.812) id=085a07c84b4c4e8ebb5c02c635665606 hard=0
+    [rollout] 33/40 (acc=0.788) id=7e9cc91827e049e89624d8004cb786dd hard=0
+    [rollout] 34/40 (acc=0.794) id=748b37db43cc4ce6a48f8eae5991fd60 hard=1
+    [rollout] 35/40 (acc=0.800) id=78c03ede8fd84f939e90ee6e2bfde497 hard=1
+    [rollout] 36/40 (acc=0.806) id=1a89c660268e445ea06a830571331573 hard=1
+    [rollout] 37/40 (acc=0.811) id=9e4f88422e8c4e47a7f96f7fe0ecb40e hard=1
+    [rollout] 38/40 (acc=0.789) id=1400ca67c580458d91e3cb319ce25a74 hard=0
+    [rollout] 39/40 (acc=0.795) id=d2f25c9e97a6478aa93396deac82f7b3 hard=1
+    [rollout] 40/40 (acc=0.775) id=06173fc595e842c6abfbd7d904bba79a hard=0
+    [1/6 done] hard=0.7750 soft=0.8917
+    [2/6 REFLECT minibatch] failure=9→2 groups  success=31→4 groups  (M=8, L=4, workers=1)
+      [analyst] 1/6 minibatch_fail_000 (8 trajs) → 3 edits
+      [analyst] 2/6 minibatch_fail_001 (1 trajs) → 1 edits
+      [analyst] 3/6 minibatch_succ_000 (8 trajs) → 2 edits
+      [analyst] 4/6 minibatch_succ_001 (8 trajs) → 1 edits
+      [analyst] 5/6 minibatch_succ_002 (8 trajs) → 3 edits
+      [analyst] 6/6 minibatch_succ_003 (7 trajs) → 1 edits
+    [2/6 done] failure_patches=2 success_patches=4
+    [3/6 AGGREGATE] failure=2 success=4 (parallel, workers=1)
+    [aggregate failure] level=1  2 patches → 1 batches (parallel, batch_size=8)
+      [aggregate failure] level=1 batch [0:2] → 1 patch (4 edits)
+    [aggregate success] level=1  4 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:4] → 1 patch (5 edits)
+    [aggregate final] 4+5 → 9 edits
+    [3/6 done] merged 9 edits
+    [4/6 SELECT] 9 -> 4 edits (budget=4, lr_control=fixed)
+    [5/6 UPDATE] skill_len 9557 -> 12217
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 2/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 3/100 (acc=1.000) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 4/100 (acc=0.750) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 5/100 (acc=0.800) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 6/100 (acc=0.833) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 7/100 (acc=0.857) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 8/100 (acc=0.875) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 9/100 (acc=0.889) id=ede0705d606d4435a300e06beab2322f hard=1
+    [rollout] 10/100 (acc=0.900) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 11/100 (acc=0.818) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 12/100 (acc=0.833) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 13/100 (acc=0.846) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 14/100 (acc=0.857) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 15/100 (acc=0.867) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 16/100 (acc=0.875) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 17/100 (acc=0.882) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 18/100 (acc=0.889) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 19/100 (acc=0.842) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 20/100 (acc=0.850) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 21/100 (acc=0.857) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 22/100 (acc=0.864) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 23/100 (acc=0.826) id=3fdb66ab2b0a49318b053edda6633237 hard=0
+    [rollout] 24/100 (acc=0.833) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 25/100 (acc=0.840) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 26/100 (acc=0.846) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 27/100 (acc=0.852) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 28/100 (acc=0.821) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 29/100 (acc=0.828) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 30/100 (acc=0.833) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 31/100 (acc=0.839) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 32/100 (acc=0.844) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 33/100 (acc=0.848) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 34/100 (acc=0.853) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 35/100 (acc=0.857) id=09c769c7262e43eb95a52e874042c02a hard=1
+    [rollout] 36/100 (acc=0.861) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 37/100 (acc=0.865) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 38/100 (acc=0.868) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 39/100 (acc=0.872) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 40/100 (acc=0.875) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 41/100 (acc=0.878) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 42/100 (acc=0.881) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 43/100 (acc=0.884) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 44/100 (acc=0.886) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 45/100 (acc=0.889) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 46/100 (acc=0.891) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 47/100 (acc=0.894) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 48/100 (acc=0.896) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 49/100 (acc=0.898) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 50/100 (acc=0.880) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 51/100 (acc=0.882) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 52/100 (acc=0.865) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 53/100 (acc=0.868) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 54/100 (acc=0.870) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 55/100 (acc=0.873) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 56/100 (acc=0.857) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 57/100 (acc=0.860) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 58/100 (acc=0.862) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 59/100 (acc=0.864) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 60/100 (acc=0.867) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 61/100 (acc=0.869) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 62/100 (acc=0.871) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 63/100 (acc=0.857) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 64/100 (acc=0.859) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.862) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.864) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 67/100 (acc=0.851) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 68/100 (acc=0.838) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 69/100 (acc=0.841) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 70/100 (acc=0.829) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 71/100 (acc=0.831) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 72/100 (acc=0.833) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 73/100 (acc=0.836) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 74/100 (acc=0.838) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 75/100 (acc=0.840) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 76/100 (acc=0.842) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 77/100 (acc=0.844) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 78/100 (acc=0.846) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 79/100 (acc=0.835) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 80/100 (acc=0.838) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 81/100 (acc=0.840) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 82/100 (acc=0.841) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 83/100 (acc=0.843) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 84/100 (acc=0.845) id=1882f20b777146608474ac0056d54a5e hard=1
+    [rollout] 85/100 (acc=0.847) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 86/100 (acc=0.849) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 87/100 (acc=0.851) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 88/100 (acc=0.852) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.854) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 90/100 (acc=0.856) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 91/100 (acc=0.857) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 92/100 (acc=0.859) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 93/100 (acc=0.860) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 94/100 (acc=0.862) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 95/100 (acc=0.863) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 96/100 (acc=0.865) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 97/100 (acc=0.866) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 98/100 (acc=0.867) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 99/100 (acc=0.859) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 100/100 (acc=0.850) id=b6bfa34339c649398ae3b4540ed95fcf hard=0
+    [6/6 EVALUATE] ACCEPT (new best) hard=0.8500 > prev best 0.8400
+
+  [STEP 4 done] epoch=1 action=accept_new_best current=0.8500 best=0.8500 dt=4157.7s
+    timing: rollout=217.8s reflect=2283.8s aggregate=859.7s select=148.5s evaluate=648.1s
+
+  [STEP 5/20] epoch=1 step_in_epoch=4 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=1047)
+    [rollout] 1/40 (acc=0.000) id=1a02c8a18c464f8eaa996aeeb6781f35 hard=0
+    [rollout] 2/40 (acc=0.500) id=82b3d01ea72847959730b3ef349b2d76 hard=1
+    [rollout] 3/40 (acc=0.667) id=9a7142e4d14a46e3af6bdd1237f9eadc hard=1
+    [rollout] 4/40 (acc=0.500) id=142bd93393f2485196d7788833e978c2 hard=0
+    [rollout] 5/40 (acc=0.600) id=6e240188701842e282d3505b4f16759f hard=1
+    [rollout] 6/40 (acc=0.667) id=c3fc79b46f1b49c6aceb10bd477433e6 hard=1
+    [rollout] 7/40 (acc=0.571) id=4a01a9f5147b44c89bec8b58e7d82180 hard=0
+    [rollout] 8/40 (acc=0.625) id=2a01dc0307324219a4662f82f260a065 hard=1
+    [rollout] 9/40 (acc=0.667) id=2bbdbb989efc4ced951e49007006cc17 hard=1
+    [rollout] 10/40 (acc=0.700) id=276ee199fa1c46fe83e00ca9a3f65b43 hard=1
+    [rollout] 11/40 (acc=0.636) id=f6f35af39efd4a16ba440993d142349e hard=0
+    [rollout] 12/40 (acc=0.667) id=ae698acda1784f6eb6a946e081c43526 hard=1
+    [rollout] 13/40 (acc=0.692) id=2c699e9e4ae44c33a19f35b48d894de7 hard=1
+    [rollout] 14/40 (acc=0.714) id=e6f84aaad73243259e2929f51e197d91 hard=1
+    [rollout] 15/40 (acc=0.733) id=b42aaf6fa0dd4d3195e8ae7e6ca33019 hard=1
+    [rollout] 16/40 (acc=0.688) id=4800beb1d45f4c07b41e608bf9c2b579 hard=0
+    [rollout] 17/40 (acc=0.706) id=ad15e2300a1a47fdbfeb72706be74969 hard=1
+    [rollout] 18/40 (acc=0.722) id=da7acff4255640aaaf92c73cf53e1423 hard=1
+    [rollout] 19/40 (acc=0.737) id=0d6855b36a0a49229d38e4a376b6ee09 hard=1
+    [rollout] 20/40 (acc=0.750) id=fa57913ceb924df88a8e7d3968927ae4 hard=1
+    [rollout] 21/40 (acc=0.762) id=6edbaf5d20644789ad2ee3e43db1e415 hard=1
+    [rollout] 22/40 (acc=0.773) id=0fe06452bd2645dc8fabe1ff397d352f hard=1
+    [rollout] 23/40 (acc=0.783) id=7e5e734bd37c46c8b053387161ab00fb hard=1
+    [rollout] 24/40 (acc=0.792) id=9503db8da9dd45ed9b51b4ef05ab7833 hard=1
+    [rollout] 25/40 (acc=0.800) id=11db4151a9f34f9fbe86f521fed062c3 hard=1
+    [rollout] 26/40 (acc=0.808) id=85dd599e005947249d15ab9699c57060 hard=1
+    [rollout] 27/40 (acc=0.778) id=b903e822010b4363837a3d26eb110a7e hard=0
+    [rollout] 28/40 (acc=0.786) id=4edd282826b84986a11ca56b62daaba6 hard=1
+    [rollout] 29/40 (acc=0.793) id=9385f7d320d047ac97f8d15f6169dbfc hard=1
+    [rollout] 30/40 (acc=0.800) id=7625c352e07f4adda1c443a7f79ab85c hard=1
+    [rollout] 31/40 (acc=0.806) id=9ccac9b7c91c4747b36dcae64742e3a1 hard=1
+    [rollout] 32/40 (acc=0.812) id=4a329ae0cc934d0a8bc1980b894838a5 hard=1
+    [rollout] 33/40 (acc=0.818) id=1771ba8dd1ef499384b613cc5755802b hard=1
+    [rollout] 34/40 (acc=0.794) id=a6eb760a3753499881a8bbbf9e60749c hard=0
+    [rollout] 35/40 (acc=0.800) id=0463305740994fbea5a10ae8303e66c1 hard=1
+    [rollout] 36/40 (acc=0.806) id=2899eea4efa7475cb3f553968f335d25 hard=1
+    [rollout] 37/40 (acc=0.811) id=fcf2b8b0ba924ce095aa0eb5fa543528 hard=1
+    [rollout] 38/40 (acc=0.816) id=c962c464089d40edbfa73b38dcc6e404 hard=1
+    [rollout] 39/40 (acc=0.821) id=88ef5630dd7e4d449171aed39f7b78b3 hard=1
+    [rollout] 40/40 (acc=0.800) id=6072e63558b445ad9c01394dfed313b4 hard=0
+    [1/6 done] hard=0.8000 soft=0.8400
+    [2/6 REFLECT minibatch] failure=8→1 groups  success=32→4 groups  (M=8, L=4, workers=1)
+      [analyst] 1/5 minibatch_fail_000 (8 trajs) → 3 edits
+      [analyst] 2/5 minibatch_succ_000 (8 trajs) → 1 edits
+      [analyst] 3/5 minibatch_succ_001 (8 trajs) → 1 edits
+      [analyst] 4/5 minibatch_succ_002 (8 trajs) → 1 edits
+      [analyst] 5/5 minibatch_succ_003 (8 trajs) → 2 edits
+    [2/6 done] failure_patches=1 success_patches=4
+    [3/6 AGGREGATE] failure=1 success=4 (parallel, workers=1)
+    [aggregate success] level=1  4 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:4] → 1 patch (4 edits)
+    [aggregate final] 3+4 → 7 edits
+    [3/6 done] merged 7 edits
+    [4/6 SELECT] 7 -> 4 edits (budget=4, lr_control=fixed)
+    [5/6 UPDATE] skill_len 12217 -> 15840
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 2/100 (acc=1.000) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 3/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 4/100 (acc=1.000) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 5/100 (acc=0.800) id=ede0705d606d4435a300e06beab2322f hard=0
+    [rollout] 6/100 (acc=0.833) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 7/100 (acc=0.857) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 8/100 (acc=0.875) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 9/100 (acc=0.889) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 10/100 (acc=0.900) id=5e9b0b44825e44d89ba0501c3b819685 hard=1
+    [rollout] 11/100 (acc=0.909) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 12/100 (acc=0.917) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 13/100 (acc=0.923) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 14/100 (acc=0.929) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 15/100 (acc=0.933) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 16/100 (acc=0.938) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 17/100 (acc=0.941) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 18/100 (acc=0.944) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 19/100 (acc=0.947) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 20/100 (acc=0.900) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 21/100 (acc=0.905) id=3fdb66ab2b0a49318b053edda6633237 hard=1
+    [rollout] 22/100 (acc=0.909) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 23/100 (acc=0.870) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 24/100 (acc=0.875) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 25/100 (acc=0.880) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 26/100 (acc=0.885) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 27/100 (acc=0.889) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 28/100 (acc=0.893) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 29/100 (acc=0.897) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 30/100 (acc=0.900) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 31/100 (acc=0.903) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 32/100 (acc=0.906) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 33/100 (acc=0.909) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 34/100 (acc=0.912) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 35/100 (acc=0.914) id=09c769c7262e43eb95a52e874042c02a hard=1
+    [rollout] 36/100 (acc=0.917) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 37/100 (acc=0.919) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 38/100 (acc=0.921) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 39/100 (acc=0.923) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 40/100 (acc=0.925) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 41/100 (acc=0.927) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 42/100 (acc=0.929) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 43/100 (acc=0.930) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 44/100 (acc=0.932) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 45/100 (acc=0.933) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 46/100 (acc=0.935) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 47/100 (acc=0.936) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 48/100 (acc=0.917) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 49/100 (acc=0.918) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 50/100 (acc=0.900) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 51/100 (acc=0.902) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 52/100 (acc=0.904) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 53/100 (acc=0.906) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 54/100 (acc=0.889) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 55/100 (acc=0.891) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 56/100 (acc=0.893) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 57/100 (acc=0.895) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 58/100 (acc=0.897) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 59/100 (acc=0.898) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 60/100 (acc=0.883) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 61/100 (acc=0.885) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 62/100 (acc=0.871) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 63/100 (acc=0.873) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 64/100 (acc=0.875) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.877) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.879) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 67/100 (acc=0.866) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 68/100 (acc=0.853) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 69/100 (acc=0.855) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 70/100 (acc=0.857) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 71/100 (acc=0.859) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 72/100 (acc=0.861) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 73/100 (acc=0.863) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 74/100 (acc=0.865) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 75/100 (acc=0.867) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 76/100 (acc=0.868) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 77/100 (acc=0.857) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 78/100 (acc=0.859) id=1882f20b777146608474ac0056d54a5e hard=1
+    [rollout] 79/100 (acc=0.861) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 80/100 (acc=0.863) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 81/100 (acc=0.864) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 82/100 (acc=0.866) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 83/100 (acc=0.867) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 84/100 (acc=0.869) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 85/100 (acc=0.871) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 86/100 (acc=0.872) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 87/100 (acc=0.874) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 88/100 (acc=0.875) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.876) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 90/100 (acc=0.878) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 91/100 (acc=0.879) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 92/100 (acc=0.880) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 93/100 (acc=0.882) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 94/100 (acc=0.883) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 95/100 (acc=0.884) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 96/100 (acc=0.885) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 97/100 (acc=0.887) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 98/100 (acc=0.888) id=b6bfa34339c649398ae3b4540ed95fcf hard=1
+    [rollout] 99/100 (acc=0.879) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 100/100 (acc=0.870) id=df43ea868a6d409ea67eb632fc9f285c TIMEOUT
+    [6/6 EVALUATE] ACCEPT (new best) hard=0.8700 > prev best 0.8500
+
+  [STEP 5 done] epoch=1 action=accept_new_best current=0.8700 best=0.8700 dt=4668.7s
+    timing: rollout=274.6s reflect=2551.7s aggregate=696.0s select=118.4s evaluate=1028.0s
+
+  [SLOW UPDATE epoch 1] injected empty placeholder
+
+  [META SKILL epoch 1] skipped — first epoch
+
+  [EPOCH 2/4] shuffled_seeds=[2043, 2044, 2045, 2046, 2047]
+
+  [STEP 6/20] epoch=2 step_in_epoch=0 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=2043)
+    [rollout] 1/40 (acc=1.000) id=bc1ef2955bcf472196361585d9463538 hard=1
+    [rollout] 2/40 (acc=0.500) id=3408f804dc7e4a6bb51891e3da461a54 hard=0
+    [rollout] 3/40 (acc=0.667) id=4a329ae0cc934d0a8bc1980b894838a5 hard=1
+    [rollout] 4/40 (acc=0.750) id=59b6334f5b434d8e81465b14eea5d4a5 hard=1
+    [rollout] 5/40 (acc=0.800) id=5b04fd8c679641139047cc40603013c2 hard=1
+    [rollout] 6/40 (acc=0.833) id=236f43d3be1842018933ab6fd06b51c2 hard=1
+    [rollout] 7/40 (acc=0.714) id=142bd93393f2485196d7788833e978c2 hard=0
+    [rollout] 8/40 (acc=0.625) id=e6f84aaad73243259e2929f51e197d91 hard=0
+    [rollout] 9/40 (acc=0.667) id=a7e4d6381a1b471c84731033ec54cc0b hard=1
+    [rollout] 10/40 (acc=0.700) id=ff0750f494744de299aa839d0cdfcc23 hard=1
+    [rollout] 11/40 (acc=0.727) id=c7e063e6fba34b3794255784fbc72761 hard=1
+    [rollout] 12/40 (acc=0.750) id=28ce80cc4e9440b8bae1ec4a2c94c4c4 hard=1
+    [rollout] 13/40 (acc=0.692) id=8f78cc704744414b85fb4c2337882174 hard=0
+    [rollout] 14/40 (acc=0.643) id=06173fc595e842c6abfbd7d904bba79a hard=0
+    [rollout] 15/40 (acc=0.667) id=2899eea4efa7475cb3f553968f335d25 hard=1
+    [rollout] 16/40 (acc=0.688) id=78c03ede8fd84f939e90ee6e2bfde497 hard=1
+    [rollout] 17/40 (acc=0.706) id=fd23a7fe7b654680a211f7e1cfb1f90c hard=1
+    [rollout] 18/40 (acc=0.722) id=84d440710b744b89a29347d22493207f hard=1
+    [rollout] 19/40 (acc=0.737) id=d5319e0a56c946889232069668b770af hard=1
+    [rollout] 20/40 (acc=0.750) id=6444b0f90cec44c58387b82f6047e411 hard=1
+    [rollout] 21/40 (acc=0.714) id=4c64770f574c499392b07f182a75c72c hard=0
+    [rollout] 22/40 (acc=0.682) id=6b497ac583564d389f5e5f3f565e0030 hard=0
+    [rollout] 23/40 (acc=0.696) id=5c4fcaf8522d4d69812bf4f813b242b1 hard=1
+    [rollout] 24/40 (acc=0.708) id=ad15e2300a1a47fdbfeb72706be74969 hard=1
+    [rollout] 25/40 (acc=0.720) id=9a7142e4d14a46e3af6bdd1237f9eadc hard=1
+    [rollout] 26/40 (acc=0.731) id=270f65b074984463b3fe55433c93ff22 hard=1
+    [rollout] 27/40 (acc=0.704) id=085a07c84b4c4e8ebb5c02c635665606 hard=0
+    [rollout] 28/40 (acc=0.714) id=437621201d544d3b8993b6eb1bf040d1 hard=1
+    [rollout] 29/40 (acc=0.724) id=f82dd783e8d14425916cad9fdeb26b6f hard=1
+    [rollout] 30/40 (acc=0.733) id=6e240188701842e282d3505b4f16759f hard=1
+    [rollout] 31/40 (acc=0.742) id=d2f25c9e97a6478aa93396deac82f7b3 hard=1
+    [rollout] 32/40 (acc=0.750) id=2f6c578181d34df796365787acb8ecc1 hard=1
+    [rollout] 33/40 (acc=0.758) id=67186a3da6fe44de968b3dcd38ecc059 hard=1
+    [rollout] 34/40 (acc=0.765) id=58d9a51541c94bb3a24e88109329d14c hard=1
+    [rollout] 35/40 (acc=0.771) id=699d0ee09cef409cb640078bb31baa00 hard=1
+    [rollout] 36/40 (acc=0.778) id=fe01132758b64f638d75195e73901329 hard=1
+    [rollout] 37/40 (acc=0.784) id=a2c76bb55b1f4d74b5871c6a1c1fd1c1 hard=1
+    [rollout] 38/40 (acc=0.789) id=a6a5643ffbbe4e209ab8b7fc28f12572 hard=1
+    [rollout] 39/40 (acc=0.795) id=2a01dc0307324219a4662f82f260a065 hard=1
+    [rollout] 40/40 (acc=0.800) id=2bbdbb989efc4ced951e49007006cc17 hard=1
+    [1/6 done] hard=0.8000 soft=0.8825
+    [2/6 REFLECT minibatch] failure=8→1 groups  success=32→4 groups  (M=8, L=4, workers=1)
+      [analyst] 1/5 minibatch_fail_000 (8 trajs) → 3 edits
+      [analyst] 2/5 minibatch_succ_000 (8 trajs) → 1 edits
+      [analyst] 3/5 minibatch_succ_001 (8 trajs) → 1 edits
+      [analyst] 4/5 minibatch_succ_002 (8 trajs) → 1 edits
+      [analyst] 5/5 minibatch_succ_003 (8 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=4
+    [3/6 AGGREGATE] failure=1 success=4 (parallel, workers=1)
+    [aggregate success] level=1  4 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:4] → 1 patch (4 edits)
+    [aggregate final] 3+4 → 7 edits
+    [3/6 done] merged 7 edits
+    [4/6 SELECT] 7 -> 4 edits (budget=4, lr_control=fixed)
+    [5/6 UPDATE] skill_len 15893 -> 19058
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 2/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 3/100 (acc=1.000) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 4/100 (acc=1.000) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 5/100 (acc=1.000) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 6/100 (acc=0.833) id=ede0705d606d4435a300e06beab2322f hard=0
+    [rollout] 7/100 (acc=0.714) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 8/100 (acc=0.750) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 9/100 (acc=0.778) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 10/100 (acc=0.800) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 11/100 (acc=0.727) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 12/100 (acc=0.750) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 13/100 (acc=0.769) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 14/100 (acc=0.786) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 15/100 (acc=0.800) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 16/100 (acc=0.812) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 17/100 (acc=0.824) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 18/100 (acc=0.833) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 19/100 (acc=0.789) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 20/100 (acc=0.800) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 21/100 (acc=0.810) id=3fdb66ab2b0a49318b053edda6633237 hard=1
+    [rollout] 22/100 (acc=0.818) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 23/100 (acc=0.783) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 24/100 (acc=0.750) id=eae01f064523415c95e57ff1e8dadc43 hard=0
+    [rollout] 25/100 (acc=0.760) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 26/100 (acc=0.769) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 27/100 (acc=0.778) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 28/100 (acc=0.786) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 29/100 (acc=0.793) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 30/100 (acc=0.800) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 31/100 (acc=0.806) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 32/100 (acc=0.812) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 33/100 (acc=0.818) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 34/100 (acc=0.824) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 35/100 (acc=0.829) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 36/100 (acc=0.806) id=09c769c7262e43eb95a52e874042c02a hard=0
+    [rollout] 37/100 (acc=0.811) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 38/100 (acc=0.816) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 39/100 (acc=0.821) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 40/100 (acc=0.825) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 41/100 (acc=0.829) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 42/100 (acc=0.833) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 43/100 (acc=0.837) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 44/100 (acc=0.841) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 45/100 (acc=0.844) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 46/100 (acc=0.848) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 47/100 (acc=0.851) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 48/100 (acc=0.854) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 49/100 (acc=0.857) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 50/100 (acc=0.840) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 51/100 (acc=0.824) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 52/100 (acc=0.827) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 53/100 (acc=0.830) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 54/100 (acc=0.833) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 55/100 (acc=0.836) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 56/100 (acc=0.821) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 57/100 (acc=0.825) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 58/100 (acc=0.828) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 59/100 (acc=0.831) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 60/100 (acc=0.833) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 61/100 (acc=0.836) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 62/100 (acc=0.839) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 63/100 (acc=0.825) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 64/100 (acc=0.828) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.831) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.818) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 67/100 (acc=0.821) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 68/100 (acc=0.824) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 69/100 (acc=0.826) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 70/100 (acc=0.814) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 71/100 (acc=0.803) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 72/100 (acc=0.806) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 73/100 (acc=0.808) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 74/100 (acc=0.811) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 75/100 (acc=0.813) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 76/100 (acc=0.816) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 77/100 (acc=0.818) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 78/100 (acc=0.808) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 79/100 (acc=0.810) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 80/100 (acc=0.812) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 81/100 (acc=0.815) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 82/100 (acc=0.817) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 83/100 (acc=0.819) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 84/100 (acc=0.821) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 85/100 (acc=0.812) id=1882f20b777146608474ac0056d54a5e hard=0
+    [rollout] 86/100 (acc=0.814) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 87/100 (acc=0.816) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 88/100 (acc=0.818) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 89/100 (acc=0.820) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 90/100 (acc=0.822) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 91/100 (acc=0.824) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 92/100 (acc=0.826) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 93/100 (acc=0.828) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 94/100 (acc=0.830) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 95/100 (acc=0.832) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 96/100 (acc=0.833) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 97/100 (acc=0.835) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 98/100 (acc=0.837) id=b6bfa34339c649398ae3b4540ed95fcf hard=1
+    [rollout] 99/100 (acc=0.828) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 100/100 (acc=0.820) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=0
+    [6/6 EVALUATE] REJECT hard=0.8200 <= current=0.8700
+
+  [STEP 6 done] epoch=2 action=reject current=0.8700 best=0.8700 dt=4623.1s
+    timing: rollout=366.7s reflect=2646.2s aggregate=598.5s select=181.2s evaluate=830.5s
+
+  [STEP 7/20] epoch=2 step_in_epoch=1 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=2044)
+    [rollout] 1/40 (acc=1.000) id=ebc6b86a3fa7432a9aadff96c2582451 hard=1
+    [rollout] 2/40 (acc=1.000) id=c17c5f8d2ef746a7a9a5db0b674b865b hard=1
+    [rollout] 3/40 (acc=1.000) id=f9a43b1f4b0045199d978101d84ce464 hard=1
+    [rollout] 4/40 (acc=0.750) id=82823aae4a844d19ac0a56464dfe28c0 hard=0
+    [rollout] 5/40 (acc=0.800) id=fcf2b8b0ba924ce095aa0eb5fa543528 hard=1
+    [rollout] 6/40 (acc=0.833) id=7c3a99ff45e44531ad5af85d04f7d55d hard=1
+    [rollout] 7/40 (acc=0.857) id=3909c367f524402d8ba5ec2b520ba206 hard=1
+    [rollout] 8/40 (acc=0.875) id=2c699e9e4ae44c33a19f35b48d894de7 hard=1
+    [rollout] 9/40 (acc=0.889) id=c07610477e95400dbed310bb792c13f8 hard=1
+    [rollout] 10/40 (acc=0.800) id=f6f35af39efd4a16ba440993d142349e hard=0
+    [rollout] 11/40 (acc=0.818) id=7b250d069e3945bcba610b9fc43a46f8 hard=1
+    [rollout] 12/40 (acc=0.833) id=1bfa6eef0be04bf9bac6288883877660 hard=1
+    [rollout] 13/40 (acc=0.846) id=81327636d4624edead2294809968062c hard=1
+    [rollout] 14/40 (acc=0.857) id=1a936c9b0fd7482abd4b090e9c16ecf4 hard=1
+    [rollout] 15/40 (acc=0.867) id=1dd7a02b15e0470d91a8fedfca5357ca hard=1
+    [rollout] 16/40 (acc=0.812) id=6b03e6e855304974afebc7624b2b7d9b hard=0
+    [rollout] 17/40 (acc=0.824) id=1ffcea80a2334a1fba10c96a4162fc0f hard=1
+    [rollout] 18/40 (acc=0.833) id=0fe06452bd2645dc8fabe1ff397d352f hard=1
+    [rollout] 19/40 (acc=0.789) id=24e447c6f2564bfcab303c390cb606dd hard=0
+    [rollout] 20/40 (acc=0.800) id=1f479608c5434054b6996e4c2dfe8a8d hard=1
+    [rollout] 21/40 (acc=0.810) id=d4bbd47856554cb08d00cb00e29d02d3 hard=1
+    [rollout] 22/40 (acc=0.818) id=1a89c660268e445ea06a830571331573 hard=1
+    [rollout] 23/40 (acc=0.826) id=05234edfaf004e39824dc5e6e24bea97 hard=1
+    [rollout] 24/40 (acc=0.833) id=b42aaf6fa0dd4d3195e8ae7e6ca33019 hard=1
+    [rollout] 25/40 (acc=0.840) id=c3fc79b46f1b49c6aceb10bd477433e6 hard=1
+    [rollout] 26/40 (acc=0.846) id=18515f0c52164134aa75cf7fba6ec4a5 hard=1
+    [rollout] 27/40 (acc=0.815) id=278992dfba6a4d959973da300131fd4a hard=0
+    [rollout] 28/40 (acc=0.821) id=9ccac9b7c91c4747b36dcae64742e3a1 hard=1
+    [rollout] 29/40 (acc=0.828) id=3d6d6c6208a5461eb6f3e43db5e56a9c hard=1
+    [rollout] 30/40 (acc=0.833) id=64cb77e3c59a40e1ae3a9502bd565867 hard=1
+    [rollout] 31/40 (acc=0.806) id=8cde5fd949c8425a8a651fb64249411b hard=0
+    [rollout] 32/40 (acc=0.812) id=ea88242882794a9ea5705de2e68a3782 hard=1
+    [rollout] 33/40 (acc=0.818) id=c66c3e09a4974ac3b4e3ca131991cac9 hard=1
+    [rollout] 34/40 (acc=0.824) id=64b954345b54447eae4b0ebbd8d5b530 hard=1
+    [rollout] 35/40 (acc=0.829) id=05233ca5688f41e89f651c35808e59f1 hard=1
+    [rollout] 36/40 (acc=0.806) id=ade7418b6bd44e3098b3fcac3ca523e1 hard=0
+    [rollout] 37/40 (acc=0.811) id=a30487960f7c42898d332c6f038686f4 hard=1
+    [rollout] 38/40 (acc=0.816) id=b63e3d061b494f01967242defbed9ad1 hard=1
+    [rollout] 39/40 (acc=0.821) id=d0f792528e814905a9679bfdc38d757e hard=1
+    [rollout] 40/40 (acc=0.825) id=3d53e8fe018842bf8741c023dbab9a63 hard=1
+    [1/6 done] hard=0.8250 soft=0.8417
+    [2/6 REFLECT minibatch] failure=7→1 groups  success=33→5 groups  (M=8, L=4, workers=1)
+      [analyst] 1/6 minibatch_fail_000 (7 trajs) → 2 edits
+      [analyst] 2/6 minibatch_succ_000 (8 trajs) → 0 edits
+      [analyst] 3/6 minibatch_succ_001 (8 trajs) → 2 edits
+      [analyst] 4/6 minibatch_succ_002 (8 trajs) → 2 edits
+      [analyst] 5/6 minibatch_succ_003 (8 trajs) → 1 edits
+      [analyst] 6/6 minibatch_succ_004 (1 trajs) → 0 edits
+    [2/6 done] failure_patches=1 success_patches=3
+    [3/6 AGGREGATE] failure=1 success=3 (parallel, workers=1)
+    [aggregate success] level=1  3 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:3] → 1 patch (5 edits)
+    [aggregate final] 2+5 → 7 edits
+    [3/6 done] merged 7 edits
+    [4/6 SELECT] 7 -> 3 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 15893 -> 17696
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=1.000) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 2/100 (acc=1.000) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 3/100 (acc=1.000) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 4/100 (acc=1.000) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 5/100 (acc=1.000) id=ede0705d606d4435a300e06beab2322f hard=1
+    [rollout] 6/100 (acc=1.000) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 7/100 (acc=1.000) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 8/100 (acc=1.000) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 9/100 (acc=1.000) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 10/100 (acc=0.900) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 11/100 (acc=0.909) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 12/100 (acc=0.917) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 13/100 (acc=0.923) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 14/100 (acc=0.929) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 15/100 (acc=0.867) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 16/100 (acc=0.875) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 17/100 (acc=0.882) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 18/100 (acc=0.889) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 19/100 (acc=0.895) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 20/100 (acc=0.850) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 21/100 (acc=0.857) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 22/100 (acc=0.864) id=3fdb66ab2b0a49318b053edda6633237 hard=1
+    [rollout] 23/100 (acc=0.870) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 24/100 (acc=0.875) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 25/100 (acc=0.880) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 26/100 (acc=0.885) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 27/100 (acc=0.889) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 28/100 (acc=0.893) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 29/100 (acc=0.862) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 30/100 (acc=0.867) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 31/100 (acc=0.871) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 32/100 (acc=0.875) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 33/100 (acc=0.879) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 34/100 (acc=0.882) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 35/100 (acc=0.886) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 36/100 (acc=0.889) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 37/100 (acc=0.892) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 38/100 (acc=0.895) id=09c769c7262e43eb95a52e874042c02a hard=1
+    [rollout] 39/100 (acc=0.897) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 40/100 (acc=0.900) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 41/100 (acc=0.902) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 42/100 (acc=0.905) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 43/100 (acc=0.907) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 44/100 (acc=0.909) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 45/100 (acc=0.911) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 46/100 (acc=0.913) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 47/100 (acc=0.915) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 48/100 (acc=0.917) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 49/100 (acc=0.918) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 50/100 (acc=0.900) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 51/100 (acc=0.902) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 52/100 (acc=0.885) id=1f232b1de1f34793b6557c8688bf4d9c hard=0
+    [rollout] 53/100 (acc=0.887) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 54/100 (acc=0.889) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 55/100 (acc=0.891) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 56/100 (acc=0.893) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 57/100 (acc=0.895) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 58/100 (acc=0.879) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 59/100 (acc=0.881) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 60/100 (acc=0.883) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 61/100 (acc=0.885) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 62/100 (acc=0.887) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 63/100 (acc=0.873) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 64/100 (acc=0.875) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.862) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 66/100 (acc=0.864) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 67/100 (acc=0.866) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 68/100 (acc=0.853) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 69/100 (acc=0.841) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 70/100 (acc=0.843) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 71/100 (acc=0.845) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 72/100 (acc=0.847) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 73/100 (acc=0.849) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 74/100 (acc=0.851) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 75/100 (acc=0.853) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 76/100 (acc=0.855) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 77/100 (acc=0.857) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 78/100 (acc=0.846) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 79/100 (acc=0.848) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 80/100 (acc=0.850) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 81/100 (acc=0.852) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 82/100 (acc=0.854) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 83/100 (acc=0.855) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 84/100 (acc=0.857) id=1882f20b777146608474ac0056d54a5e hard=1
+    [rollout] 85/100 (acc=0.859) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 86/100 (acc=0.860) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 87/100 (acc=0.862) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 88/100 (acc=0.864) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.865) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=1
+    [rollout] 90/100 (acc=0.867) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 91/100 (acc=0.868) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 92/100 (acc=0.870) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 93/100 (acc=0.871) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 94/100 (acc=0.872) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 95/100 (acc=0.874) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 96/100 (acc=0.875) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 97/100 (acc=0.876) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 98/100 (acc=0.878) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [rollout] 99/100 (acc=0.869) id=b6bfa34339c649398ae3b4540ed95fcf hard=0
+    [rollout] 100/100 (acc=0.860) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [6/6 EVALUATE] REJECT hard=0.8600 <= current=0.8700
+
+  [STEP 7 done] epoch=2 action=reject current=0.8700 best=0.8700 dt=4494.3s
+    timing: rollout=296.8s reflect=2880.4s aggregate=392.7s select=147.6s evaluate=776.8s
+
+  [STEP 8/20] epoch=2 step_in_epoch=2 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=2045)
+    [rollout] 1/40 (acc=1.000) id=4e8fbabb7956459085d66bc20fae8324 hard=1
+    [rollout] 2/40 (acc=1.000) id=9587fe34c9234e2594097a92be3bad43 hard=1
+    [rollout] 3/40 (acc=1.000) id=748b37db43cc4ce6a48f8eae5991fd60 hard=1
+    [rollout] 4/40 (acc=1.000) id=1f424622ebce46c1b9360177e2864bbb hard=1
+    [rollout] 5/40 (acc=0.800) id=618aeca497d04e9bab54cf8a95cf2ee5 hard=0
+    [rollout] 6/40 (acc=0.833) id=a1673e0607ec48e7972067fab1cc473a hard=1
+    [rollout] 7/40 (acc=0.857) id=88ef5630dd7e4d449171aed39f7b78b3 hard=1
+    [rollout] 8/40 (acc=0.875) id=8b1cc801ee384a50a8a2f85d0057be79 hard=1
+    [rollout] 9/40 (acc=0.889) id=fa57913ceb924df88a8e7d3968927ae4 hard=1
+    [rollout] 10/40 (acc=0.900) id=1c02c69e65764c4680caaa9814ff105c hard=1
+    [rollout] 11/40 (acc=0.909) id=7625c352e07f4adda1c443a7f79ab85c hard=1
+    [rollout] 12/40 (acc=0.917) id=167752253c1c4cff907a6314c5754d12 hard=1
+    [rollout] 13/40 (acc=0.923) id=89411c8621e240c494a72549e4b60917 hard=1
+    [rollout] 14/40 (acc=0.929) id=19b5970d418b4eecb5f9efdc2b72e15d hard=1
+    [rollout] 15/40 (acc=0.933) id=2651422c5a2043c79aba79b664f8adea hard=1
+    [rollout] 16/40 (acc=0.938) id=4515ad88ccac4171bff647a836a79771 hard=1
+    [rollout] 17/40 (acc=0.882) id=763c2e8903734a32ad04d027be42eee0 hard=0
+    [rollout] 18/40 (acc=0.889) id=929d024018584364a928895a128d9c74 hard=1
+    [rollout] 19/40 (acc=0.895) id=9503db8da9dd45ed9b51b4ef05ab7833 hard=1
+    [rollout] 20/40 (acc=0.900) id=49ce7d167210412c83f5adc12972a8b0 hard=1
+    [rollout] 21/40 (acc=0.905) id=c962c464089d40edbfa73b38dcc6e404 hard=1
+    [rollout] 22/40 (acc=0.909) id=03cf1cccf4e141c4b305d86909d560a9 hard=1
+    [rollout] 23/40 (acc=0.913) id=ce7deda3129f4ce9ba75e15ab7219cd4 hard=1
+    [rollout] 24/40 (acc=0.917) id=63787d20e4d5407ba2f041792127069f hard=1
+    [rollout] 25/40 (acc=0.920) id=d86f059053b84a90964e806da32c9302 hard=1
+    [rollout] 26/40 (acc=0.923) id=58f65c725a344349b9412bddb5ba7c4f hard=1
+    [rollout] 27/40 (acc=0.926) id=781056bddbdf4d9398c75358271035e0 hard=1
+    [rollout] 28/40 (acc=0.929) id=b903e822010b4363837a3d26eb110a7e hard=1
+    [rollout] 29/40 (acc=0.931) id=12cde56adcdc41d9916c1423da39a156 hard=1
+    [rollout] 30/40 (acc=0.933) id=2f64ddfae03e4ad09a994cc70db5661d hard=1
+    [rollout] 31/40 (acc=0.935) id=770470c452174a719260377ebb9ab2f4 hard=1
+    [rollout] 32/40 (acc=0.938) id=25b184d228f84079a2fe6cde821b9f09 hard=1
+    [rollout] 33/40 (acc=0.939) id=7e5e734bd37c46c8b053387161ab00fb hard=1
+    [rollout] 34/40 (acc=0.941) id=9e4f88422e8c4e47a7f96f7fe0ecb40e hard=1
+    [rollout] 35/40 (acc=0.943) id=1828dbc7142641cf8708fd0298158308 hard=1
+    [rollout] 36/40 (acc=0.944) id=d17df63c03b74139a64c2d7833e235d3 hard=1
+    [rollout] 37/40 (acc=0.946) id=d0d2a5070eaf43ef8b449dbecdf57817 hard=1
+    [rollout] 38/40 (acc=0.947) id=514ab2eb38724633848138feb7819466 hard=1
+    [rollout] 39/40 (acc=0.949) id=a6eb760a3753499881a8bbbf9e60749c hard=1
+    [rollout] 40/40 (acc=0.925) id=a7f79b085bd04f98847589443fd0f61d hard=0
+    [1/6 done] hard=0.9250 soft=0.9583
+    [2/6 REFLECT minibatch] failure=3→1 groups  success=37→5 groups  (M=8, L=4, workers=1)
+      [analyst] 1/6 minibatch_fail_000 (3 trajs) → 3 edits
+      [analyst] 2/6 minibatch_succ_000 (8 trajs) → 0 edits
+      [analyst] 3/6 minibatch_succ_001 (8 trajs) → 1 edits
+      [analyst] 4/6 minibatch_succ_002 (8 trajs) → 0 edits
+      [analyst] 5/6 minibatch_succ_003 (8 trajs) → 1 edits
+      [analyst] 6/6 minibatch_succ_004 (5 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=3
+    [3/6 AGGREGATE] failure=1 success=3 (parallel, workers=1)
+    [aggregate success] level=1  3 patches → 1 batches (parallel, batch_size=8)
+      [aggregate success] level=1 batch [0:3] → 1 patch (3 edits)
+    [aggregate final] 3+3 → 6 edits
+    [3/6 done] merged 6 edits
+    [4/6 SELECT] 6 -> 3 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 15893 -> 17273
+    [6/6 EVALUATE] selection items=100
+    [rollout] 1/100 (acc=0.000) id=5e9b0b44825e44d89ba0501c3b819685 hard=0
+    [rollout] 2/100 (acc=0.500) id=7eb9a69a23b8469b9f20f1915abff3be hard=1
+    [rollout] 3/100 (acc=0.667) id=08c0e9678f1548aebeada27ab7b954e1 hard=1
+    [rollout] 4/100 (acc=0.750) id=8e22ba3b6fc34886a86d60dd1a1db025 hard=1
+    [rollout] 5/100 (acc=0.800) id=dc2add9004fd40e69fcbd2eea80c513c hard=1
+    [rollout] 6/100 (acc=0.667) id=ede0705d606d4435a300e06beab2322f hard=0
+    [rollout] 7/100 (acc=0.714) id=940ddc06648f4c9bac6b3bf5df402e5a hard=1
+    [rollout] 8/100 (acc=0.750) id=db73ca2786684b9e92deb1fcc796effd hard=1
+    [rollout] 9/100 (acc=0.778) id=439e908aa7c7422daf5632af7e0440ec hard=1
+    [rollout] 10/100 (acc=0.800) id=b028bea99d2641268532cd2a32d4ad2d hard=1
+    [rollout] 11/100 (acc=0.818) id=8d130f744b214055ad0c4cdce459a4b9 hard=1
+    [rollout] 12/100 (acc=0.750) id=df43ea868a6d409ea67eb632fc9f285c hard=0
+    [rollout] 13/100 (acc=0.769) id=802015dbc9f5406d8df3b468497f6553 hard=1
+    [rollout] 14/100 (acc=0.786) id=dbfb81f100dc474f8267e6f9ab0ae51c hard=1
+    [rollout] 15/100 (acc=0.800) id=68c7f892cbd94fc59ebe4ef1e1ad0c89 hard=1
+    [rollout] 16/100 (acc=0.812) id=2e112a7c9d97482fa0deb079c6c09172 hard=1
+    [rollout] 17/100 (acc=0.824) id=c51c26c07b384bbe865976b81a86736d hard=1
+    [rollout] 18/100 (acc=0.833) id=687434d75186430896ea636fec156e6d hard=1
+    [rollout] 19/100 (acc=0.789) id=9b56a920d67a48e8b33932802d17d374 hard=0
+    [rollout] 20/100 (acc=0.800) id=8c77419b4e864778b965753f411bb469 hard=1
+    [rollout] 21/100 (acc=0.810) id=eae01f064523415c95e57ff1e8dadc43 hard=1
+    [rollout] 22/100 (acc=0.818) id=0fc37a4bd8424ecf8eede56e956edb3a hard=1
+    [rollout] 23/100 (acc=0.783) id=3fdb66ab2b0a49318b053edda6633237 hard=0
+    [rollout] 24/100 (acc=0.792) id=e9d415f928644b59b5ed19b7011f627d hard=1
+    [rollout] 25/100 (acc=0.800) id=c49a8bf2d0ad4afd9b0bb0d03c1b9d96 hard=1
+    [rollout] 26/100 (acc=0.769) id=746448dcf441410db997a59f7137a2c8 hard=0
+    [rollout] 27/100 (acc=0.778) id=b913e55670474b69a70736d314822155 hard=1
+    [rollout] 28/100 (acc=0.786) id=206a9ffb8ed24686a24db1492c9f10dc hard=1
+    [rollout] 29/100 (acc=0.793) id=a1d0d03fcac54483a1e88542b767afd5 hard=1
+    [rollout] 30/100 (acc=0.800) id=3a90f09909344dfdbb1a73f80c983a87 hard=1
+    [rollout] 31/100 (acc=0.806) id=675f01b5343e46599626104968c0f45a hard=1
+    [rollout] 32/100 (acc=0.812) id=231d7d9955d54f60a1f1ff4f0bf1c5b6 hard=1
+    [rollout] 33/100 (acc=0.818) id=d67cecf38f954800a7c651cca70bdc66 hard=1
+    [rollout] 34/100 (acc=0.824) id=5324041c25d04316a800ccba2d79a2c7 hard=1
+    [rollout] 35/100 (acc=0.829) id=ea7c66d5dae241eda155763541749cd1 hard=1
+    [rollout] 36/100 (acc=0.833) id=09c769c7262e43eb95a52e874042c02a hard=1
+    [rollout] 37/100 (acc=0.838) id=ce42d55ff5874c6380e018896b16e128 hard=1
+    [rollout] 38/100 (acc=0.842) id=83928d21f3504843aa6294ce9d9c8da1 hard=1
+    [rollout] 39/100 (acc=0.846) id=77970683cb6444388e5cfdd743784db6 hard=1
+    [rollout] 40/100 (acc=0.850) id=24143f01e7dd455e86c34a4a6f4ed3b9 hard=1
+    [rollout] 41/100 (acc=0.854) id=878108ec7e9742a090175bd33390e2c5 hard=1
+    [rollout] 42/100 (acc=0.857) id=0335847f4a44451db5a1b775cc019765 hard=1
+    [rollout] 43/100 (acc=0.860) id=cdf86d1982f64cb49d6595680b1c53b8 hard=1
+    [rollout] 44/100 (acc=0.864) id=7c26258ff99c4adeb4b9b35001005453 hard=1
+    [rollout] 45/100 (acc=0.867) id=b11499ee2a1f4a2b8fa8c9f561136430 hard=1
+    [rollout] 46/100 (acc=0.870) id=e77dbfc0d45e476b9ed5b2204b6d9fc8 hard=1
+    [rollout] 47/100 (acc=0.872) id=d66f1f0158054f638ff1b8acf3e18a8a hard=1
+    [rollout] 48/100 (acc=0.854) id=17b441db9b444435951d859e6e081f3b hard=0
+    [rollout] 49/100 (acc=0.857) id=4ae645d2721c4751b1e71c83870bbe16 hard=1
+    [rollout] 50/100 (acc=0.860) id=1f232b1de1f34793b6557c8688bf4d9c hard=1
+    [rollout] 51/100 (acc=0.863) id=41c691d3b7e94ffd993647c7e531e94e hard=1
+    [rollout] 52/100 (acc=0.865) id=2b85b097d130404daeb26a3349bdc297 hard=1
+    [rollout] 53/100 (acc=0.868) id=f7bf36628c7540da907dda84b48aac82 hard=1
+    [rollout] 54/100 (acc=0.870) id=3e40d5d91615427d976a56932be3c955 hard=1
+    [rollout] 55/100 (acc=0.873) id=66dc8aee931142b1834da63363511491 hard=1
+    [rollout] 56/100 (acc=0.875) id=28b837ac304845bd961a46cedc9246af hard=1
+    [rollout] 57/100 (acc=0.860) id=6231d57d040143e3bc56cafaabaa0975 hard=0
+    [rollout] 58/100 (acc=0.862) id=3b4a5a2f617b43c8aa37b0890f576749 hard=1
+    [rollout] 59/100 (acc=0.847) id=3d0cad58c3c145f3b98d51c06a65a0c9 hard=0
+    [rollout] 60/100 (acc=0.850) id=5463f1d3fc124cadb2ad016076a699f5 hard=1
+    [rollout] 61/100 (acc=0.852) id=3b1c596e1720499ebe790d14f34a67af hard=1
+    [rollout] 62/100 (acc=0.855) id=fbaae95260474ed58ccbb05ac482089b hard=1
+    [rollout] 63/100 (acc=0.841) id=3b2acfd62bdf4361aa4e51895d12df8b hard=0
+    [rollout] 64/100 (acc=0.844) id=80b114d03dbb4598b5da648bbe174d0f hard=1
+    [rollout] 65/100 (acc=0.846) id=8f4beaa8a7704eba93f753a0e7040165 hard=1
+    [rollout] 66/100 (acc=0.848) id=162917ea12b24d0e874540feecf9b445 hard=1
+    [rollout] 67/100 (acc=0.851) id=6e6fd6d62ce54031a4e36f88c2d5b63d hard=1
+    [rollout] 68/100 (acc=0.838) id=70e3e1e1d41f4795ba45678d5f4b6524 hard=0
+    [rollout] 69/100 (acc=0.841) id=691e3a24e5994c749ff11c6bc43b2d1c hard=1
+    [rollout] 70/100 (acc=0.829) id=ea475dcd08d54da6896f56e330fa2a1c hard=0
+    [rollout] 71/100 (acc=0.831) id=5dbcadd728fa4956a4f739c1168fbf18 hard=1
+    [rollout] 72/100 (acc=0.833) id=64899cac91e5423fa3617bf576e6df4d hard=1
+    [rollout] 73/100 (acc=0.836) id=18d1fcc3ed394b23ada799aad3beca90 hard=1
+    [rollout] 74/100 (acc=0.838) id=847f117d4638487d92539d52eb07a999 hard=1
+    [rollout] 75/100 (acc=0.840) id=bfec094ae9da4aaebd91713b39d3008e hard=1
+    [rollout] 76/100 (acc=0.842) id=357af030b55046fc856e03fdac36032a hard=1
+    [rollout] 77/100 (acc=0.844) id=c7bd32aee95f485d85d0b6749d542c51 hard=1
+    [rollout] 78/100 (acc=0.833) id=bcecb67a14f34fc6896bc5d65c58405a hard=0
+    [rollout] 79/100 (acc=0.835) id=a3a3892296c74fc4b23b2475156901b1 hard=1
+    [rollout] 80/100 (acc=0.838) id=015641bf588b43aebba1aee07a8afde0 hard=1
+    [rollout] 81/100 (acc=0.840) id=78ae271549144680a42139693d1117e9 hard=1
+    [rollout] 82/100 (acc=0.841) id=9960a3f1ac954282a7ea1d7f7c8a86f9 hard=1
+    [rollout] 83/100 (acc=0.843) id=1a5baeb7a51d453d892ba70a9de2146d hard=1
+    [rollout] 84/100 (acc=0.845) id=74441a0f7dae42ca9ee19d8be8c9b318 hard=1
+    [rollout] 85/100 (acc=0.847) id=74c45e35e5a740798fbd528ff08a70e3 hard=1
+    [rollout] 86/100 (acc=0.837) id=1882f20b777146608474ac0056d54a5e hard=0
+    [rollout] 87/100 (acc=0.839) id=c87234a3a1074b5ea5500114ad9aa16d hard=1
+    [rollout] 88/100 (acc=0.841) id=12d5b51c793a43b1aa3b7e1bf5f4bc73 hard=1
+    [rollout] 89/100 (acc=0.843) id=5af06dca120a46889964109e94fff0a0 hard=1
+    [rollout] 90/100 (acc=0.833) id=746806ac0b1c48cb80d7ab5ad0a63517 hard=0
+    [rollout] 91/100 (acc=0.835) id=5c2009e4f1384b27b4b4fe9422f048ed hard=1
+    [rollout] 92/100 (acc=0.837) id=2417ce75564b4b8eab1ddd755b10d962 hard=1
+    [rollout] 93/100 (acc=0.839) id=a1d460152c3840d98ed3bc45bf80d5c1 hard=1
+    [rollout] 94/100 (acc=0.840) id=8d0dd71f94cc4abba255f3cdd6c2d940 hard=1
+    [rollout] 95/100 (acc=0.842) id=e50328dc70634863ac39580ef6f8dd5a hard=1
+    [rollout] 96/100 (acc=0.844) id=e27a4c1fb25c48809feb3cc438b5eb3c hard=1
+    [rollout] 97/100 (acc=0.845) id=bbeeec20466a4dab9e4d73d86c964cba hard=1
+    [rollout] 98/100 (acc=0.837) id=b6bfa34339c649398ae3b4540ed95fcf hard=0
+    [rollout] 99/100 (acc=0.828) id=1730220302104d54ba2bb781ca219e52 hard=0
+    [rollout] 100/100 (acc=0.830) id=4cfc841cb81e4c90822cfb7c0ec9f86e hard=1
+    [6/6 EVALUATE] REJECT hard=0.8300 <= current=0.8700
+
+  [STEP 8 done] epoch=2 action=reject current=0.8700 best=0.8700 dt=4830.5s
+    timing: rollout=784.2s reflect=2905.4s aggregate=297.2s select=109.2s evaluate=734.5s
+
+  [STEP 9/20] epoch=2 step_in_epoch=3 ==============================
+    [1/6 ROLLOUT] train items=40 (from pool, batch_seed=2046)
+    [rollout] 1/40 (acc=1.000) id=1a02c8a18c464f8eaa996aeeb6781f35 hard=1
+    [rollout] 2/40 (acc=1.000) id=234a1d78bd3449b6ac6c3f4ed367c6b1 hard=1
+    [rollout] 3/40 (acc=0.667) id=5f096a5da5954ca7b948a59c038e00bd hard=0
+    [rollout] 4/40 (acc=0.500) id=7e9cc91827e049e89624d8004cb786dd hard=0
+    [rollout] 5/40 (acc=0.600) id=beec8a8ec05f402eb0a2fe8735165ac7 hard=1
+    [rollout] 6/40 (acc=0.667) id=c61866c20826409294b00fb21e1ad40f hard=1
+    [rollout] 7/40 (acc=0.714) id=2bb294748127473c895738c5addb9336 hard=1
+    [rollout] 8/40 (acc=0.750) id=82b3d01ea72847959730b3ef349b2d76 hard=1
+    [rollout] 9/40 (acc=0.778) id=0d6855b36a0a49229d38e4a376b6ee09 hard=1
+    [rollout] 10/40 (acc=0.800) id=36b0b926869f44d8a987d4d5d7d4db4c hard=1
+    [rollout] 11/40 (acc=0.818) id=0224ec0a999a4e9bba48c1fddaab7a90 hard=1
+    [rollout] 12/40 (acc=0.750) id=303fa164ac2e4484af9b7a70ebcc9ef5 hard=0
+    [rollout] 13/40 (acc=0.692) id=1400ca67c580458d91e3cb319ce25a74 hard=0
+    [rollout] 14/40 (acc=0.714) id=221c83e6630f4e7983da48fa28da1882 hard=1
+    [rollout] 15/40 (acc=0.667) id=1e2d47768a16419688fcffb970f20c45 hard=0
+    [rollout] 16/40 (acc=0.688) id=9d95fe416a564ee4baeed62c62474b99 hard=1
+    [rollout] 17/40 (acc=0.706) id=e702332b0c5d40309a02c987b512dff4 hard=1
+    [rollout] 18/40 (acc=0.722) id=37aa6e63537243169bb27ff4353f3245 hard=1
+    [rollout] 19/40 (acc=0.737) id=7381db7eeccd4aff8290a391fd87fb28 hard=1
+    [rollout] 20/40 (acc=0.750) id=85dd599e005947249d15ab9699c57060 hard=1
+    [rollout] 21/40 (acc=0.762) id=4b9a1b40aa0e4e2abdd1ec66ab0c2629 hard=1
+    [rollout] 22/40 (acc=0.773) id=31c23742d99d445794d38e6ee9f39e0c hard=1
+    [rollout] 23/40 (acc=0.783) id=be33c663172e45daac47333cebdfcb40 hard=1
+    [rollout] 24/40 (acc=0.792) id=4edd282826b84986a11ca56b62daaba6 hard=1
+    [rollout] 25/40 (acc=0.800) id=fe04e87911fa4df8a6e1efc58867bc1a hard=1
+    [rollout] 26/40 (acc=0.769) id=8c9f6c94c0784cfc81db422bec240984 hard=0
+    [rollout] 27/40 (acc=0.741) id=4800beb1d45f4c07b41e608bf9c2b579 hard=0
+    [rollout] 28/40 (acc=0.750) id=13d7f98d33d645f5bc6a9d7e392c802d hard=1
+    [rollout] 29/40 (acc=0.759) id=e40d9fd25333471391594f14203c326e hard=1
+    [rollout] 30/40 (acc=0.767) id=1e687cbe048042f390f9448065703dff hard=1
+    [rollout] 31/40 (acc=0.774) id=ac67fde6994c4862a8307c958e371191 hard=1
+    [rollout] 32/40 (acc=0.781) id=6255c8693ca94f4f893c39421d9469e7 hard=1
+    [rollout] 33/40 (acc=0.788) id=b722cd69f05c4f39bef92c714fd9aaa3 hard=1
+    [rollout] 34/40 (acc=0.794) id=9385f7d320d047ac97f8d15f6169dbfc hard=1
+    [rollout] 35/40 (acc=0.800) id=da7acff4255640aaaf92c73cf53e1423 hard=1
+    [rollout] 36/40 (acc=0.806) id=2d8fbdb21ab448f7819e13a06ffd9bbc hard=1
+    [rollout] 37/40 (acc=0.811) id=2c8296d242ba415da60f642f1d40cdad hard=1
+    [rollout] 38/40 (acc=0.816) id=ae698acda1784f6eb6a946e081c43526 hard=1
+    [rollout] 39/40 (acc=0.795) id=7f8fafb69c89438fa2d458434ed4ebe9 hard=0
+    [rollout] 40/40 (acc=0.775) id=a4375645235745baac2b0253713ff424 hard=0
+    [1/6 done] hard=0.7750 soft=0.8775
+    [2/6 REFLECT minibatch] failure=9→2 groups  success=31→4 groups  (M=8, L=4, workers=1)
+Traceback (most recent call last):
+  File "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/gradient/reflect.py", line 334, in run_error_analyst_minibatch
+    response, _ = chat_optimizer(
+  File "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/model/__init__.py", line 119, in chat_optimizer
+    return _qwen.chat_optimizer(
+  File "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/model/qwen_backend.py", line 382, in chat_optimizer
+    return _chat_messages_impl(
+  File "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/model/qwen_backend.py", line 252, in _chat_messages_impl
+    raise RuntimeError(f"Qwen chat call failed after {retries} retries: {last_err}")
+RuntimeError: Qwen chat call failed after 3 retries: Qwen chat API returned HTTP 400: {"error":{"message":"This model's maximum context length is 65536 tokens. However, you requested 16384 output tokens and your prompt contains at least 49153 input tokens, for a total of at least 65537 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=49153)","type":"BadRequestError","param":"input_tokens","code":400}}
+      [analyst] 1/6 minibatch_fail_000 (8 trajs) → 0 edits
+      [analyst] 2/6 minibatch_fail_001 (1 trajs) → 2 edits
+      [analyst] 3/6 minibatch_succ_000 (8 trajs) → 1 edits

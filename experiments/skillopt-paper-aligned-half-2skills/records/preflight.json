@@ -1,0 +1,278 @@
+{
+  "artifacts": [
+    {
+      "path": "/work/tc442/models/Qwen3.5-9B/config.json",
+      "sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05"
+    },
+    {
+      "path": "/work/tc442/models/Qwen3.5-9B/model.safetensors.index.json",
+      "sha256": "26d3539b516be613f39563617cb9d33b3f83d401298125be392c80cefb8f7fe5"
+    },
+    {
+      "path": "/work/tc442/models/Qwen3.8-27B-FP8/config.json",
+      "sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc"
+    },
+    {
+      "path": "/work/tc442/models/Qwen3.8-27B-FP8/model.safetensors.index.json",
+      "sha256": "f0838c766951bdfe76d6afbdb2771a8f67aaa2231dedb3d33cebd817729843a2"
+    },
+    {
+      "path": "/work/tc442/models/Qwen3.8-27B-FP8/crc32.txt",
+      "sha256": "5ccb0f7436ae756484561fe915780509845f903ea1780dbe9b0a3a7a0dd095ac"
+    },
+    {
+      "path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/materialize_from_frozen_parent.py",
+      "sha256": "fcc5623c7bcb3c2d4d31218685ba1d3a33d2621493ba665b6ca056cc185313c5"
+    },
+    {
+      "path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/materialization_audit.json",
+      "sha256": "4a7bc2647ecda2d83c06c638947f6b1605157a8ac69db3363007b3bd8e5f55c2"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/run-index.json",
+      "sha256": "badc438eb59958884ff93ebfb90fd4fbc921a03fd959b50c5e605618f6314391"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/context-capacity-transition.json",
+      "sha256": "615dfea899bf645f46f387349eb3efba5026d96a285201cb07365c12c779f8d6"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/scope-reduction.json",
+      "sha256": "d256c64a4c8ed92f6c4e28e32119e26dc80d830bcacc267a36e356b0a6504e73"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/context-capacity-transition-20260827T143414Z/sha256sums.txt",
+      "sha256": "ce84cfb99e17e19883a4a390b0a87907782d04473b2b4237086b49d123051589"
+    },
+    {
+      "path": "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/engine/trainer.py",
+      "sha256": "c8d19ba77fff0e034da0156b990eab5360f4e3317c316d5b22d46780b94e7d62"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/configs/searchqa.yaml",
+      "sha256": "ff8e6b713e4fc1d6d15c02d93561334d2f1938da3bed08cb7aae6590c7b3a264"
+    },
+    {
+      "path": "/work/tc442/skill-evolution-poison-data/skillopt-official/materialized/skillopt_paper_aligned_half_2skills/searchqa/split_manifest.json",
+      "sha256": "cdc7bd7b2ea32ecece1e044970a175900a056fec026b91ed6b26f8028d8bb33c"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/clean/initial.md",
+      "sha256": "d3ed21de4a5216da7c3cd63acc2330dc78227524753c9d29573e6692f48d6709"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/db_delete/initial.md",
+      "sha256": "1632781e198655e89eac19ae9b2fcff08f684c91592a3fa9eac8dc02ddfe3c23"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/file_delete/initial.md",
+      "sha256": "02ca0a8f6fcdd580131480f02dbf27069e38bb7648f4171ea7c8dbacf68c4e82"
+    },
+    {
+      "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/mock_api/initial.md",
+      "sha256": "955c130d8ce5da776647d64b363a8556b2f6859869bce08684e4b8ffe030a645"
+    }
+  ],
+  "asr_probe_count": 9,
+  "created_at": "2026-08-27T15:28:41.824284+00:00",
+  "endpoint_receipts": [
+    {
+      "endpoint": "http://127.0.0.1:19380/v1",
+      "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/servers/optimizer-Qwen3.8-27B-FP8-19380-launch.json",
+      "pid": 2864482,
+      "sha256": "4b6594b6ce3f0e5f6a2015b6e34772720820b203de103ea07f4a297f5928857f"
+    },
+    {
+      "endpoint": "http://127.0.0.1:19381/v1",
+      "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/servers/optimizer-Qwen3.8-27B-FP8-19381-launch.json",
+      "pid": 2864483,
+      "sha256": "8d2ee58c809295f2c9a92a628594ee373038a0655a223b15c3012ce1f25c8343"
+    },
+    {
+      "endpoint": "http://127.0.0.1:19351/v1",
+      "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/servers/target-Qwen3.5-9B-19351-launch.json",
+      "pid": 2864484,
+      "sha256": "12a91ce58f3145c78d9e1eb71c34d9f0f83437a1804220f8a0581e1f54214278"
+    },
+    {
+      "endpoint": "http://127.0.0.1:19352/v1",
+      "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/servers/target-Qwen3.5-9B-19352-launch.json",
+      "pid": 2864485,
+      "sha256": "eaf37bff48440a1fb87f0a0c678b807204da643a62885a1d95c5b9b7fc0a55ee"
+    },
+    {
+      "endpoint": "http://127.0.0.1:19353/v1",
+      "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/servers/target-Qwen3.5-9B-19353-launch.json",
+      "pid": 2864486,
+      "sha256": "4bd535196661a26ef767248251e7bf906eadeb0982230d366a2d4fecbc418cdd"
+    },
+    {
+      "endpoint": "http://127.0.0.1:19354/v1",
+      "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/servers/target-Qwen3.5-9B-19354-launch.json",
+      "pid": 2864487,
+      "sha256": "e2400ce85bff0d4ed1fbea2d9a5dc1ea7c47dff39ce5aa1d69dee713d69327a5"
+    }
+  ],
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "json_repair_version": "0.63.4",
+  "qualifications": [
+    {
+      "created_at": "2026-08-27T15:31:59.499082+00:00",
+      "endpoint": "http://127.0.0.1:19351/v1",
+      "experiment_id": "skillopt-paper-aligned-half-2skills",
+      "gpu_ids": [
+        1
+      ],
+      "long_request": {
+        "answer": "CTX65_OK",
+        "content_sha256": "fdc77f3ad389f4ba37735022133d9259beaca07680bbf40c0895cc81134bb326",
+        "enable_thinking": true,
+        "local_prompt_tokens": 40000,
+        "repetitions": 39980,
+        "requested_output_tokens": 2048,
+        "usage": {
+          "completion_tokens": 243,
+          "prompt_tokens": 40000,
+          "prompt_tokens_details": null,
+          "total_tokens": 40243
+        }
+      },
+      "model_identity": {
+        "alias": "Qwen3.5-9B",
+        "config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+        "repository": "Qwen/Qwen3.5-9B",
+        "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "weight_index_sha256": "26d3539b516be613f39563617cb9d33b3f83d401298125be392c80cefb8f7fe5"
+      },
+      "observed_after_request": [
+        {
+          "memory_free_mib": 1221,
+          "memory_used_mib": 22802,
+          "physical_gpu_id": 1,
+          "utilization_percent": 89
+        }
+      ],
+      "role": "target",
+      "runtime_packages": {
+        "torch": "2.11.0+cu129",
+        "transformers": "5.8.0",
+        "vllm": "0.21.0+cu129"
+      },
+      "schema_version": 3,
+      "scope": "role_bound_65k_thinking_qualification",
+      "serving_contract": {
+        "attention_backend": "TRITON_ATTN",
+        "disable_custom_all_reduce": true,
+        "dtype": "float16",
+        "enable_auto_tool_choice": true,
+        "enable_thinking": true,
+        "enforce_eager": true,
+        "gdn_prefill_backend": "triton",
+        "gpu_memory_utilization": 0.95,
+        "language_model_only": false,
+        "limit_mm_per_prompt": {
+          "image": 1,
+          "video": 0
+        },
+        "max_model_len": 65536,
+        "max_num_batched_tokens": 2048,
+        "max_num_seqs": 4,
+        "mm_processor_kwargs": {
+          "max_pixels": 5242880
+        },
+        "reasoning_parser": "qwen3",
+        "role": "target",
+        "seed": 0,
+        "tensor_parallel_size": 1,
+        "tool_call_parser": "qwen3_coder",
+        "venv": "/work/tc442/venvs/qwen38",
+        "vllm_use_flashinfer_sampler": "0"
+      },
+      "status": "passed"
+    },
+    {
+      "created_at": "2026-08-27T15:47:36.361660+00:00",
+      "endpoint": "http://127.0.0.1:19380/v1",
+      "experiment_id": "skillopt-paper-aligned-half-2skills",
+      "gpu_ids": [
+        0,
+        6
+      ],
+      "long_request": {
+        "answer": "CTX131_OK",
+        "content_sha256": "ffdf325041ff2a75398c7d4468e5dcbc6652d730619b00254acc1db21e9c1257",
+        "enable_thinking": true,
+        "local_prompt_tokens": 96000,
+        "repetitions": 95937,
+        "requested_output_tokens": 16384,
+        "usage": {
+          "completion_tokens": 65,
+          "prompt_tokens": 95958,
+          "prompt_tokens_details": null,
+          "total_tokens": 96023
+        }
+      },
+      "model_identity": {
+        "alias": "Qwen3.8-27B-FP8",
+        "config_sha256": "74227dd615bf1ea975aa676bdf355a0379858c12f394b5365cd9dfa5fc2c70bc",
+        "crc_manifest_sha256": "5ccb0f7436ae756484561fe915780509845f903ea1780dbe9b0a3a7a0dd095ac",
+        "repository": "Qwen/Qwen3.8-27B-FP8",
+        "revision": "017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+        "weight_index_sha256": "f0838c766951bdfe76d6afbdb2771a8f67aaa2231dedb3d33cebd817729843a2"
+      },
+      "observed_after_request": [
+        {
+          "memory_free_mib": 1705,
+          "memory_used_mib": 22318,
+          "physical_gpu_id": 0,
+          "utilization_percent": 98
+        },
+        {
+          "memory_free_mib": 1705,
+          "memory_used_mib": 22318,
+          "physical_gpu_id": 6,
+          "utilization_percent": 65
+        }
+      ],
+      "role": "optimizer",
+      "runtime_packages": {
+        "torch": "2.11.0+cu129",
+        "transformers": "5.8.0",
+        "vllm": "0.21.0+cu129"
+      },
+      "schema_version": 3,
+      "scope": "role_bound_131k_thinking_qualification",
+      "serving_contract": {
+        "attention_backend": "TRITON_ATTN",
+        "disable_custom_all_reduce": true,
+        "dtype": "float16",
+        "enable_auto_tool_choice": true,
+        "enable_thinking": true,
+        "enforce_eager": true,
+        "gdn_prefill_backend": "triton",
+        "gpu_memory_utilization": 0.9,
+        "language_model_only": true,
+        "limit_mm_per_prompt": {
+          "image": 0,
+          "video": 0
+        },
+        "max_model_len": 131072,
+        "max_num_batched_tokens": 4096,
+        "max_num_seqs": 2,
+        "reasoning_effort": "medium",
+        "reasoning_parser": "qwen3",
+        "role": "optimizer",
+        "seed": 0,
+        "tensor_parallel_size": 2,
+        "tool_call_parser": "qwen3_coder",
+        "venv": "/work/tc442/venvs/qwen38",
+        "vllm_use_flashinfer_sampler": "0"
+      },
+      "status": "passed"
+    }
+  ],
+  "run_index_sha256": "badc438eb59958884ff93ebfb90fd4fbc921a03fd959b50c5e605618f6314391",
+  "schema_version": 2,
+  "status": "ready",
+  "trajectory_count": 4
+}

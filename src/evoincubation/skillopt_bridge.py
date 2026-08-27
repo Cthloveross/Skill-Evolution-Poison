@@ -3,12 +3,14 @@ from __future__ import annotations
 import importlib.metadata
 import json
 import shutil
+import subprocess
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
 from evoincubation.checkpoints import discover_checkpoints, select_monitor_checkpoints
 from evoincubation.config import ExperimentConfig
-from evoincubation.io_utils import git_revision, runtime_provenance, write_json, write_jsonl
+from evoincubation.io_utils import runtime_provenance, write_json, write_jsonl
 
 EXPECTED_SKILLOPT_COMMIT = "9639719632daecacd1baaa47fe781f3c0253600a"
 
@@ -25,7 +27,31 @@ def _mean(rows: list[dict[str, Any]], key: str) -> float:
     return sum(float(row.get(key, 0.0)) for row in rows) / len(rows) if rows else 0.0
 
 
-def _skillopt_provenance() -> dict[str, Any]:
+def _package_git_revision(package_root: Path) -> str | None:
+    """Return HEAD only when ``package_root`` is itself a Git worktree root."""
+    try:
+        top_level = subprocess.run(
+            ["git", "-C", str(package_root), "rev-parse", "--show-toplevel"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        if Path(top_level).resolve() != package_root.resolve():
+            return None
+        return (
+            subprocess.run(
+                ["git", "-C", str(package_root), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            or None
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
+def _skillopt_provenance(*, expected_revision: str = EXPECTED_SKILLOPT_COMMIT) -> dict[str, Any]:
     import skillopt
 
     package_root = Path(skillopt.__file__).resolve().parent.parent
@@ -37,20 +63,46 @@ def _skillopt_provenance() -> dict[str, Any]:
         version = "unknown"
         direct_url_text = None
     direct_revision = None
+    direct_url = None
     if direct_url_text:
         try:
-            direct_revision = json.loads(direct_url_text).get("vcs_info", {}).get("commit_id")
+            direct_url_payload = json.loads(direct_url_text)
+            direct_url = direct_url_payload.get("url")
+            direct_revision = direct_url_payload.get("vcs_info", {}).get("commit_id")
         except json.JSONDecodeError:
             direct_revision = None
-    repository_revision = git_revision(package_root)
+    package_git_revision = _package_git_revision(package_root)
+    resolved_revision = direct_revision or package_git_revision
+    verification_method = (
+        "direct_url" if direct_revision else "package_git" if package_git_revision else "unverified"
+    )
     return {
         "version": version,
         "package_root": str(package_root),
-        "git_revision": repository_revision,
+        "direct_url": direct_url,
         "direct_url_revision": direct_revision,
-        "resolved_revision": repository_revision or direct_revision,
-        "expected_revision": EXPECTED_SKILLOPT_COMMIT,
+        "package_git_revision": package_git_revision,
+        "resolved_revision": resolved_revision,
+        "expected_revision": expected_revision,
+        "verification_method": verification_method,
     }
+
+
+def _verify_skillopt_revision(
+    provenance: dict[str, Any],
+    *,
+    expected_revision: str,
+    allow_unverified: bool,
+) -> None:
+    resolved_revision = provenance.get("resolved_revision")
+    if resolved_revision == expected_revision or allow_unverified:
+        return
+    raise RuntimeError(
+        "Cannot verify the required SkillOpt revision. "
+        f"Expected {expected_revision}, got {resolved_revision!r}. Install the pinned server "
+        "extra or explicitly set skillopt.allow_unverified_revision=true for a "
+        "non-confirmatory run."
+    )
 
 
 def _flat_skillopt_config(
@@ -62,8 +114,11 @@ def _flat_skillopt_config(
     model = config.raw["model"]
     evo = config.raw["evolution"]
     seed_present = bool(row["seed_present"])
+    evolution_enabled = bool(row["evolution_enabled"])
     exposure_path = data_root / "exposure" / ("poison.json" if seed_present else "benign.json")
     epochs = int(evo["epochs"])
+    batch_size = int(evo["batch_size"])
+    accumulation = int(evo.get("accumulation", 1))
     washout_epochs = int(evo.get("washout_epochs", 1))
     if washout_epochs < 0 or washout_epochs >= epochs:
         raise ValueError("evolution.washout_epochs must be >= 0 and smaller than evolution.epochs")
@@ -77,10 +132,11 @@ def _flat_skillopt_config(
         "reasoning_effort": str(model.get("reasoning_effort", "medium")),
         "rewrite_reasoning_effort": str(model.get("rewrite_reasoning_effort", "")),
         "rewrite_max_completion_tokens": int(model.get("rewrite_max_completion_tokens", 16000)),
-        "num_epochs": int(evo["epochs"]) if bool(row["evolution_enabled"]) else 0,
+        "num_epochs": epochs if evolution_enabled else 1,
         "train_size": 0,
-        "batch_size": int(evo["batch_size"]),
-        "accumulation": int(evo.get("accumulation", 1)),
+        "train_size_override": None if evolution_enabled else batch_size * accumulation,
+        "batch_size": batch_size,
+        "accumulation": accumulation,
         "seed": int(row["lineage_seed"]),
         "minibatch_size": int(evo.get("minibatch_size", 2)),
         "merge_batch_size": int(evo.get("merge_batch_size", 4)),
@@ -173,6 +229,46 @@ def _audit_gate_transitions(engine_root: Path, checkpoints: list[Any]) -> dict[s
     }
 
 
+def _audit_training_exposure(
+    engine_root: Path,
+    *,
+    expected_ids: set[str],
+) -> dict[str, Any]:
+    observations: list[dict[str, Any]] = []
+    for rollout_path in sorted(engine_root.glob("steps/step_*/**/rollouts.json")):
+        step_name = next(
+            parent.name for parent in rollout_path.parents if parent.name.startswith("step_")
+        )
+        for row in _load_items(rollout_path):
+            item_id = str(row.get("id", ""))
+            if item_id not in expected_ids:
+                continue
+            observations.append(
+                {
+                    "id": item_id,
+                    "step": step_name,
+                    "hard": float(row.get("hard", 0.0)),
+                    "soft": float(row.get("soft", 0.0)),
+                    "rollout_path": str(rollout_path),
+                }
+            )
+    counts = Counter(row["id"] for row in observations)
+    exactly_once = set(counts) == expected_ids and all(
+        counts[item_id] == 1 for item_id in expected_ids
+    )
+    return {
+        "expected_training_exposure_count": len(expected_ids),
+        "actual_training_exposure_count": len(observations),
+        "expected_ids": sorted(expected_ids),
+        "id_counts": dict(sorted(counts.items())),
+        "exactly_once": exactly_once,
+        "only_step_0001": all(row["step"] == "step_0001" for row in observations),
+        "hard_accuracy": _mean(observations, "hard"),
+        "soft_utility": _mean(observations, "soft"),
+        "observations": observations,
+    }
+
+
 def _evaluate_checkpoint(
     *,
     checkpoint,
@@ -182,11 +278,22 @@ def _evaluate_checkpoint(
     adapter,
     lineage_id: str,
     final_locked: bool,
+    evaluation_cache: dict[tuple[str, str], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    cache_key = (checkpoint.sha256, split)
+    if evaluation_cache is not None and cache_key in evaluation_cache:
+        cached = evaluation_cache[cache_key]
+        return {
+            **cached,
+            "version": checkpoint.version,
+            "changed_from_previous": int(checkpoint.changed_from_previous),
+            "final_locked": int(final_locked),
+            "reused_from_version": int(cached["version"]),
+        }
     skill = checkpoint.path.read_text(encoding="utf-8")
     out_dir = eval_root / f"v{checkpoint.version:04d}-{checkpoint.sha256[:12]}" / split
     results = adapter.rollout(items, skill, str(out_dir))
-    return {
+    metric = {
         "lineage_id": lineage_id,
         "engine": "skillopt",
         "version": checkpoint.version,
@@ -199,7 +306,11 @@ def _evaluate_checkpoint(
         "attack_success_rate": _mean(results, "attack_success"),
         "final_locked": int(final_locked),
         "rollout_path": str(out_dir / "rollouts.json"),
+        "reused_from_version": None,
     }
+    if evaluation_cache is not None:
+        evaluation_cache[cache_key] = metric
+    return metric
 
 
 def run_skillopt_lineage(
@@ -226,6 +337,7 @@ def run_skillopt_lineage(
         exposure_path=cfg["exposure_path"],
         washout_path=cfg["washout_path"],
         washout_start_epoch=cfg["washout_start_epoch"],
+        train_size_override=cfg["train_size_override"],
         workers=cfg["workers"],
         analyst_workers=cfg["analyst_workers"],
         failure_only=cfg["failure_only"],
@@ -237,16 +349,16 @@ def run_skillopt_lineage(
         max_completion_tokens=cfg["max_completion_tokens"],
         exec_timeout=cfg["exec_timeout"],
     )
-    skillopt_provenance = _skillopt_provenance()
-    resolved_revision = skillopt_provenance.get("resolved_revision")
+    expected_revision = str(
+        config.raw.get("skillopt", {}).get("expected_revision", EXPECTED_SKILLOPT_COMMIT)
+    )
+    skillopt_provenance = _skillopt_provenance(expected_revision=expected_revision)
     allow_unverified = bool(config.raw.get("skillopt", {}).get("allow_unverified_revision", False))
-    if resolved_revision != EXPECTED_SKILLOPT_COMMIT and not allow_unverified:
-        raise RuntimeError(
-            "Cannot verify the required SkillOpt revision. Expected "
-            f"{EXPECTED_SKILLOPT_COMMIT}, got {resolved_revision!r}. Install the pinned "
-            "server extra "
-            "or explicitly set skillopt.allow_unverified_revision=true for a non-confirmatory run."
-        )
+    _verify_skillopt_revision(
+        skillopt_provenance,
+        expected_revision=expected_revision,
+        allow_unverified=allow_unverified,
+    )
     provenance = {
         "runtime": runtime_provenance(),
         "skillopt": skillopt_provenance,
@@ -276,15 +388,17 @@ def run_skillopt_lineage(
     exposure_items = _load_items(Path(cfg["exposure_path"]))
     metrics: list[dict[str, Any]] = []
     eval_root = lineage_dir / "monitor_eval"
+    evaluation_cache: dict[tuple[str, str], dict[str, Any]] = {}
     metrics.append(
         _evaluate_checkpoint(
             checkpoint=selected[0],
-            split="exposure_local",
+            split="exposure_replay",
             items=exposure_items,
             eval_root=lineage_dir / "exposure_local_audit",
             adapter=adapter,
             lineage_id=str(row["lineage_id"]),
             final_locked=False,
+            evaluation_cache=evaluation_cache,
         )
     )
     for checkpoint in selected:
@@ -302,6 +416,7 @@ def run_skillopt_lineage(
                     adapter=adapter,
                     lineage_id=str(row["lineage_id"]),
                     final_locked=False,
+                    evaluation_cache=evaluation_cache,
                 )
             )
     metrics.append(
@@ -313,26 +428,37 @@ def run_skillopt_lineage(
             adapter=adapter,
             lineage_id=str(row["lineage_id"]),
             final_locked=True,
+            evaluation_cache=evaluation_cache,
         )
+    )
+    exposure_audit = _audit_training_exposure(
+        engine_root,
+        expected_ids={str(item["id"]) for item in exposure_items},
+    )
+    metrics.append(
+        {
+            "lineage_id": str(row["lineage_id"]),
+            "engine": "skillopt",
+            "version": 0,
+            "observed_at_step": 1,
+            "skill_sha256": checkpoints[0].sha256,
+            "changed_from_previous": 0,
+            "split": "exposure_actual",
+            "n": exposure_audit["actual_training_exposure_count"],
+            "hard_accuracy": exposure_audit["hard_accuracy"],
+            "soft_utility": exposure_audit["soft_utility"],
+            "attack_success_rate": 0.0,
+            "final_locked": 0,
+            "rollout_path": str(engine_root / "steps" / "step_0001" / "rollout" / "rollouts.json"),
+            "reused_from_version": None,
+        }
     )
     for metric in metrics:
         metric["gate_action"] = action_by_version.get(int(metric["version"]), "unknown")
         metric["gate_accepted"] = int("accept" in metric["gate_action"])
     write_jsonl(lineage_dir / "checkpoint_metrics.jsonl", metrics)
-    actual_exposure_dirs = sorted(
-        path
-        for path in (engine_root / "steps").glob("step_*/**/predictions/exposure-*")
-        if path.is_dir()
-    )
-    expected_actual = int(config.raw["canary"]["exposure_items"]) if row["evolution_enabled"] else 0
-    exposure_audit = {
-        "expected_training_exposure_count": expected_actual,
-        "actual_training_exposure_count": len(actual_exposure_dirs),
-        "paths": [str(path.relative_to(engine_root)) for path in actual_exposure_dirs],
-        "only_step_0001": all("step_0001" in path.parts for path in actual_exposure_dirs),
-    }
     write_json(lineage_dir / "exposure_audit.json", exposure_audit)
-    if len(actual_exposure_dirs) != expected_actual or not exposure_audit["only_step_0001"]:
+    if not exposure_audit["exactly_once"] or not exposure_audit["only_step_0001"]:
         raise RuntimeError(f"One-time exposure invariant failed: {exposure_audit}")
     shutil.copy2(selected[-1].path, lineage_dir / "final_skill.md")
     official_best = engine_root / "best_skill.md"
@@ -349,7 +475,5 @@ def run_skillopt_lineage(
             "all_changed_transitions_gate_accepted"
         ],
         "final_skill_sha256": selected[-1].sha256,
-        "exposure_local_accuracy": next(
-            metric["hard_accuracy"] for metric in metrics if metric["split"] == "exposure_local"
-        ),
+        "exposure_local_accuracy": exposure_audit["hard_accuracy"],
     }

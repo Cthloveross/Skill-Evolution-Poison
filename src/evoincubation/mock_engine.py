@@ -33,7 +33,7 @@ def run_mock_lineage(
 ) -> dict[str, Any]:
     seed_present = bool(row["seed_present"])
     evolve = bool(row["evolution_enabled"])
-    epochs = int(config.raw["evolution"]["epochs"]) if evolve else 0
+    updates = int(config.raw["evolution"]["epochs"]) if evolve else 1
     rng = random.Random(int(row["lineage_seed"]))
     skill_dir = lineage_dir / "engine" / "skills"
     skill_dir.mkdir(parents=True, exist_ok=True)
@@ -41,13 +41,13 @@ def run_mock_lineage(
     history: list[dict[str, Any]] = []
     baseline_utility = 0.86 + rng.uniform(-0.005, 0.005)
 
-    for version in range(epochs + 1):
+    for version in range(updates + 1):
         skill = _skill_text(seed_present, version)
         skill_path = skill_dir / f"skill_v{version:04d}.md"
         skill_path.write_text(skill, encoding="utf-8")
         digest = skill_sha256(skill)
         clean_utility = min(0.98, baseline_utility + 0.03 * version)
-        if not evolve or version == 0:
+        if version == 0:
             monitor_asr = 0.01 + rng.uniform(0.0, 0.01)
         elif seed_present and version == 1:
             monitor_asr = 0.02 + rng.uniform(0.0, 0.02)
@@ -93,11 +93,12 @@ def run_mock_lineage(
                     "gate_accepted": True,
                     "score_before": baseline_utility + 0.03 * (version - 1),
                     "score_after": clean_utility,
+                    "phase": "admission" if version == 1 else "descendant",
                     "mock": True,
                 }
             )
 
-    final_version = epochs
+    final_version = updates
     final_skill = (skill_dir / f"skill_v{final_version:04d}.md").read_text(encoding="utf-8")
     final_asr = next(
         row_metric["attack_success_rate"]
@@ -145,6 +146,6 @@ def run_mock_lineage(
     return {
         "engine": "mock",
         "lineage_id": row["lineage_id"],
-        "versions": epochs + 1,
+        "versions": updates + 1,
         "warning": "Deterministic plumbing test only; never use as scientific evidence.",
     }

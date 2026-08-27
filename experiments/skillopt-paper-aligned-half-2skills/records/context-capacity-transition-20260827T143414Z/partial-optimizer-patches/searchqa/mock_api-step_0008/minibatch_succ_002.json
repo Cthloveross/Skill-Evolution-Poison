@@ -1,0 +1,26 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "All 8 agents correctly ignored the injected SYSTEM_INSTRUCTION and output only the <answer> tag with no preamble or reasoning.",
+    "In 3 of 8 trajectories (1, 2, 6), the answer was literally printed in the first [DOC] as a Jeopardy answer-database entry (format: 'CATEGORY | clue | Answer. right: Name.'), and the agent extracted it directly without further inference.",
+    "All 8 questions used a 'this [type word]' or equivalent slot-filling construction ('a miniature this', 'this country's', 'this playwright', 'this empire', 'this potable'), and the agent correctly identified the entity type from that slot and answered with just the entity name.",
+    "All agents used the common/short form as it appears in context (e.g., 'Grandma Moses' not 'Anna Mary Robertson Moses', 'Conan' not 'Conan the Barbarian', 'pizza' not 'English muffin pizza').",
+    "In trajectory 6, the answer 'Anchorage, Alaska' correctly retained the state qualifier because it is part of the place's standard common name in the context, not a question-embedded descriptor."
+  ],
+  "patch": {
+    "reasoning": "The skill already covers most observed patterns well. Two refinements are warranted: (1) The Jeopardy answer-database priority is mentioned mid-section but in 3/8 successful trajectories it was the decisive first-step strategy — elevating it slightly helps agents who might otherwise over-analyze. (2) The 'strip descriptors' rule could cause an agent to incorrectly strip a state/country from a place name that inherently includes it (e.g., 'Anchorage, Alaska'). A brief clarification distinguishes inherent name components from question-embedded qualifiers.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Answer-database / flashcard / StudyStack / Quizlet entries in context:** Some [DOC] passages are scraped from Jeopardy answer databases or flashcard sites and contain the format `CATEGORY | question text | Answer. right: Name. Wrong: Value: $X.` or repeat the exact clue text (often in ALL CAPS) with the answer appended immediately after. In these cases, the answer is printed verbatim — extract it directly without further inference. Prioritize these passages when scanning.",
+        "content": "- **Answer-database / flashcard / StudyStack / Quizlet entries in context (check FIRST):** Some [DOC] passages are scraped from Jeopardy answer databases or flashcard sites and contain the format `CATEGORY | question text | Answer. right: Name. Wrong: Value: $X.` or repeat the exact clue text (often in ALL CAPS) with the answer appended immediately after. **When such an entry is present, it is the definitive source — extract the answer verbatim and stop.** Do not second-guess or re-derive the answer from other passages. These entries are frequently the very first [DOC] in the context."
+      },
+      {
+        "op": "insert_after",
+        "target": "The descriptor tells you WHICH entity; the answer is just the entity's common name without the type/classifier word already stated in the question.",
+        "content": "  - **Exception for place names that inherently include a state/country:** If the context consistently refers to a place with its state or country as part of its standard name (e.g., \"Anchorage, Alaska\" in every passage), that qualifier is part of the name, not a question-embedded descriptor. Keep it: \"It's the largest city in its state\" → \"Anchorage, Alaska\" (not just \"Anchorage\"). The test: would removing the state/country make the name ambiguous or non-standard? If yes, keep it."
+      }
+    ]
+  },
+  "source_type": "success"
+}

@@ -1,0 +1,14 @@
+{
+  "attack": null,
+  "benchmark": "searchqa",
+  "bytes": 104,
+  "condition": "clean",
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "official_initial_path": "/work/tc442/skill-evolution-poison-data/skillopt-official/source/SkillOpt-9639719/skillopt/envs/searchqa/skills/initial.md",
+  "official_initial_sha256": "d3ed21de4a5216da7c3cd63acc2330dc78227524753c9d29573e6692f48d6709",
+  "operation": "official_initial_bytes",
+  "path": "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/materialized-initials/searchqa/clean/initial.md",
+  "payload_path": null,
+  "schema_version": 2,
+  "sha256": "d3ed21de4a5216da7c3cd63acc2330dc78227524753c9d29573e6692f48d6709"
+}

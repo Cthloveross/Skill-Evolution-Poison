@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "captured_date": "2026-08-25",
+  "copy_contract": "Every listed runtime source is hash-bound; copied sources were byte-identical at capture time.",
+  "source_experiment": "experiments/smoke-test-asr-2/runtime",
+  "source_repository_revision": "1dce9866012c9e2aba367bc2692d942a519c4f35",
+  "skillsandbox_source_path": "/home/tc442/projects/skill-sandbox",
+  "skillsandbox_source_repository_revision": "7db389659fb10c027d63adf379a672513b131c95",
+  "skillsandbox_source_diff_sha256": "b2e361085455ddbbe913c72a2c124c3faee832114546688fa10a8fcd97c8849c",
+  "skillsandbox_source_had_uncommitted_changes": true,
+  "python_environment_manifest_sha256": "7ceb0442ece33127fe3ce1f007ada921d71eece0484af956785b7515b08777ff",
+  "runtime_scope": "Auditable source and environment identity; not a hermetic root filesystem.",
+  "non_hermetic_limits": [
+    "The mounted Python environment is not fully content-addressed.",
+    "Host /usr, /etc, kernel, scheduling, and hardware remain external dependencies."
+  ],
+  "verifier_bundle_sha256": "7f9f8a9fcb6f444625f8c86dc5c6d390cd3aa1c523ccdffb5cb084366bcd7bcd",
+  "files": [
+    {
+      "path": "python-environment.json",
+      "sha256": "7ceb0442ece33127fe3ce1f007ada921d71eece0484af956785b7515b08777ff",
+      "source": "experiments/self-evolution-3skills-2attacks-40-20-100/asr-runtime/python-environment.json"
+    },
+    {
+      "path": "python_environment_probe.py",
+      "sha256": "15eccf980f916f857d3f7f84ae222a534f8c7612458a6c0eee0bbade392c428d",
+      "source": "experiments/self-evolution-3skills-2attacks-40-20-100/asr-runtime/python_environment_probe.py"
+    },
+    {
+      "path": "scripts/run_isolated_dymalskill_trial.sh",
+      "sha256": "04bfe8f3bc67466c6b6b7cf5878c0d2b64c7dd56facf84520f1386db082b881d",
+      "source": "experiments/self-evolution-3skills-2attacks-40-20-100/asr-runtime/scripts/run_isolated_dymalskill_trial.sh"
+    },
+    {
+      "path": "scripts/support/dymalskill_blocked_command.sh",
+      "sha256": "6879b4e848720b15d6631b5ef007a27f3207823964cc076c0e5ead4bc568d5bb",
+      "source": "experiments/smoke-test-asr-2/runtime/scripts/support/dymalskill_blocked_command.sh"
+    },
+    {
+      "path": "scripts/support/model_socket_bridge.py",
+      "sha256": "e87adb9bc0195da53a25891e9bf3fd18e3a9b669b6467493c0cc4d78b306c8a8",
+      "source": "experiments/smoke-test-asr-2/runtime/scripts/support/model_socket_bridge.py"
+    },
+    {
+      "path": "stage7_v3_behavior_verifier.py",
+      "sha256": "5aa4bfa0c5ca775186551d89d979a313521171fabd7faa8e32122805f4da1a30",
+      "source": "experiments/smoke-test-asr-2/runtime/stage7_v3_behavior_verifier.py"
+    },
+    {
+      "path": "stage7_v3_pipeline.py",
+      "sha256": "69e7aa0c93b66e166c014409314e4901c31a4e2eb0ae720d1e30c940a51d240a",
+      "source": "experiments/smoke-test-asr-2/runtime/stage7_v3_pipeline.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/baseline_utils.py",
+      "sha256": "976311230494439f1a19bd55c451717e973c4ac6dcb894d45e34268b82a9ee3a",
+      "source": "/home/tc442/projects/skill-sandbox/baseline_utils.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/__init__.py",
+      "sha256": "db19419437c6f2201045c042d41452b6de7b0165fbe337684347b01ede0aa7f1",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/legacy/__init__.py",
+      "sha256": "cddca8f0aee7f5da409e0107904aac62b66b87a4c3c439b40acb479095d9eb16",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/legacy/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/legacy/common.py",
+      "sha256": "911e890c6f805df52d6b06c9dd6136c2b118d2b7f8694998a2a9d47cf10d80d5",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/legacy/common.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/legacy/opi_filter.py",
+      "sha256": "b293bceec1b8d0482c3db48263f7613d56d428ff5c8ed40862b2322390047623",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/legacy/opi_filter.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/open_prompt_injection/__init__.py",
+      "sha256": "5d5ed08ed254e33a75314868824ba948a5e9dcd2b245ca26c8f61508aff2201a",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/open_prompt_injection/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/open_prompt_injection/adapter.py",
+      "sha256": "e5339fd0fdf1589e90833fbcac91ecf9a4490c29a5324d3b2e6ae29188165a4a",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/open_prompt_injection/adapter.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/open_prompt_injection/datasentinel.py",
+      "sha256": "29622dde99b5b52da0c83fb16675d4c30b2630a365a7194fd55469425bddffb3",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/open_prompt_injection/datasentinel.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/open_prompt_injection/pipeline.py",
+      "sha256": "e71db1dcc62018442b225a223a1e11516fbae3c811cbc41adbb240bc2fd28c67",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/open_prompt_injection/pipeline.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/open_prompt_injection/promptlocate.py",
+      "sha256": "e4bab68301bcea431db18801c313f74f17116c7fb4a4f893f3a9fa4597e1cfdf",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/open_prompt_injection/promptlocate.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/prompt_armor/__init__.py",
+      "sha256": "443175688c66374483e7a1aaae7ce9ac03056a85369ed4ac6cbb1cca0b0fba36",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/prompt_armor/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/prompt_armor/adapter.py",
+      "sha256": "9ffbd8efc1b98de3ce8d0921df21f225ee00dba649e830111f317aeb77b12888",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/prompt_armor/adapter.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/prompt_armor/gpt_detector.py",
+      "sha256": "58cced38cc648dd8ed4c153752e9a0f155d3bbf84e2fa5f2feab3d18cba2112b",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/prompt_armor/gpt_detector.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/shared/__init__.py",
+      "sha256": "6c1d68b85b34b35fae49e1ff78e66a90eee2065170c9af8c3ac10eb18794e5b3",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/shared/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/shared/common.py",
+      "sha256": "1944464743129aa573ced388fdf9312f3804f79069f342870c8b406fdcbcb584",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/shared/common.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/shared/markdown_parser.py",
+      "sha256": "8e3ee9b96f8f28dd81466a6c6fd6d863a9ef934101bc8288a39b7265bf3d50d5",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/shared/markdown_parser.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/shared/schema.py",
+      "sha256": "11f65f45525b1b350575e2da2770c7b515efb7f259156f19085bb0f7f9e0c953",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/shared/schema.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/shared/types.py",
+      "sha256": "791c78f894ce1762bec3e800c58266c5b8659608619a693edc0dd87b30788495",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/shared/types.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/struq/__init__.py",
+      "sha256": "6f154ae1e0640b12532d3ee72de9feb74285b09a9dfe833cf5580538157ddd2e",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/struq/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/struq/canonicalizer.py",
+      "sha256": "bbfd2fc86757281abfcda1645945ae9eb971d247a7221530326b26f30c61115e",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/struq/canonicalizer.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/struq/fixed.py",
+      "sha256": "cdd72ff1698f1dccaf35ba6b9c4b316454991dcd2661181a9586ba6bbc0618f5",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/struq/fixed.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/defenses/struq/schema.py",
+      "sha256": "b4054aab1f6b7eeadbcd8d9d186f2a2765fdd1e0d34c23dd5092ef9fb2b1d80a",
+      "source": "/home/tc442/projects/skill-sandbox/defenses/struq/schema.py"
+    },
+    {
+      "path": "vendor/skillsandbox_pipeline/pipeline.py",
+      "sha256": "b1d3073ecd41d8d0d813ca75777ebdeb1f0631c1828c5bddc29b231c917094af",
+      "source": "/home/tc442/projects/skill-sandbox/pipeline.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/MANIFEST.json",
+      "sha256": "8401622322a8d49e47d309029d797a181e507bdfa966f8a2ca3108fe28cfe6c1",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/MANIFEST.json"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/__init__.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/_shared.py",
+      "sha256": "13ac9a350dfbe61274e9eab7393ae580a9f5c7d40906a63d2b14071442712a54",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/_shared.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_cpu_hijack.py",
+      "sha256": "053904fabd6bdee13f4a7a4b1f1c28794ba385d21cc6d82a7e3c050587c85445",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_cpu_hijack.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_credential_abuse.py",
+      "sha256": "8776c7b1121e01253261e2539effcfd75dccd548f0bd0249e4211e0dafff2aba",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_credential_abuse.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_data_exfil_file.py",
+      "sha256": "b230d9e879c4f79995affb86f5bd6f396b7c0eac2bb1f5b37578166fc964ed7c",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_data_exfil_file.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_data_exfil_http.py",
+      "sha256": "6e573837408f53a658ab555d4b31dbe71d77f4d8c47cd3e7bd2b101bab87a6dc",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_data_exfil_http.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_data_exfil_log.py",
+      "sha256": "de0212820a260d0f75dc6f9df0975c6c372a6b525f562aa4167f8ec020ff483e",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_data_exfil_log.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_db_delete.py",
+      "sha256": "a1be44b6dd43cb5c889ca48a6c808a2cba855d42851798700915880b43c37e0d",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_db_delete.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_db_insert.py",
+      "sha256": "1d69eb89da13b5fe5055dbf8332fca2cdfa768d6e8256a71db4c9289a57f3940",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_db_insert.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_dos.py",
+      "sha256": "7f348216e0f286f87c4b442d35ea023222772815bed4b0030ce9f8a925414449",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_dos.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_file_delete.py",
+      "sha256": "2da3240724b754a0e0003d1f9f023483bfbfb80ee6d5da6f7aaf33bfe48b2f27",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_file_delete.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_gpu_hijack.py",
+      "sha256": "59f93fdd53c5be03b5ed1ee2fe0b5680e8061144971e18b6dada15bfc8b73df1",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_gpu_hijack.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_mock_api.py",
+      "sha256": "102deac14f29833eb220d1bdbd06aa04d2edfd9f67a411adb6a7459b09e7af78",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_mock_api.py"
+    },
+    {
+      "path": "vendor/skillsandbox_verifier_12/verify_rce.py",
+      "sha256": "122a1c2c92b379ba8061bb10c3f05553454912a61d4329f167efd882dcccd2c5",
+      "source": "experiments/smoke-test-asr-2/runtime/vendor/skillsandbox_verifier_12/verify_rce.py"
+    }
+  ]
+}

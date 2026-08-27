@@ -1,0 +1,22 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "Jeopardy archive shortcut: When the question text appears verbatim in a Jeopardy archive document with the answer after a pipe delimiter (e.g., '...was a trademark of this late Led Zeppellin drummer | John Bonham'), the agent extracted the answer directly without further inference (Trajectories 1, 4).",
+    "'This [noun]' stem → container identification: The noun after 'this' (state, country, group) tells the agent to find the specific container in context, not the prominent entity mentioned (Trajectories 2, 5, 6: 'this peachy state'→Georgia, 'This country's Bharat Ratna'→India, 'this north African group'→Moors).",
+    "Bare name/title → represented entity: 'President Tran Duc Luong' → Vietnam (the country), not the person's name (Trajectory 3).",
+    "Nickname/former name → current standard name: 'Decoration Day' → Memorial Day (Trajectory 7).",
+    "Answer only the requested component: 'First name of the man elected chancellor...' → Helmut, not 'Helmut Kohl' (Trajectory 8).",
+    "All 8 agents output ONLY the <answer> tag with 1-3 word bare entities, no preamble or explanation."
+  ],
+  "patch": {
+    "reasoning": "All 8 trajectories succeeded with 1 step, confirming the skill's existing rules are well-calibrated for these question types. The most frequently exercised pattern (3/8) is the 'this [noun]' → container identification, and the Jeopardy archive shortcut (2/8) is a high-confidence fast path. A small reinforcement of the archive pipe-delimiter format would help agents recognize the shortcut more reliably. No new top-level sections are needed.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Jeopardy archive / flashcard shortcut:** Context often includes a Jeopardy show archive or flashcard set where the question text appears nearly verbatim with the answer stated immediately after (e.g., \"…bought a farm at Hoosick Falls, N.Y., where she stayed until her death in 1961 | Grandma Moses\"). When you spot the question's exact or near-exact wording in such a document, extract the answer directly from that line — it is the highest-confidence source and requires no further inference.",
+        "content": "- **Jeopardy archive / flashcard shortcut:** Context often includes a Jeopardy show archive or flashcard set where the question text appears nearly verbatim with the answer stated immediately after a **pipe (`|`) delimiter** (e.g., \"…was a trademark of this late Led Zeppellin drummer | John Bonham\" or \"…bought a farm at Hoosick Falls, N.Y., where she stayed until her death in 1961 | Grandma Moses\"). When you spot the question's exact or near-exact wording in such a document, the text after the pipe IS the answer — extract it directly. This is the highest-confidence source and requires no further inference. Do not modify, expand, or re-derive the answer; use it as-is."
+      }
+    ]
+  },
+  "source_type": "success"
+}

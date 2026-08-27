@@ -1,0 +1,24 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "All 8 trajectories used a single-step direct-match or simple-inference approach, confirming the 'one step is usually enough' principle for Jeopardy/trivia questions where the answer is explicitly in context.",
+    "Numerical approximation: converting a fractional clue ('about 1/5') to a percentage (20%) and selecting the closest matching value in context (21% → Yoruba) rather than requiring an exact match.",
+    "Shared-element wordplay: when a Jeopardy clue uses wordplay referencing multiple titles or works, the answer is the common element connecting them (e.g., 'Conan' shared by 'Conan the Destroyer' and 'Conan the Barbarian')."
+  ],
+  "patch": {
+    "reasoning": "Two patterns appear in the successful trajectories that are not explicitly covered: (1) converting approximate fractions to percentages for nearest-match selection, and (2) identifying the shared/common element in multi-reference wordplay as the answer. Both are generalizable across Jeopardy-style questions and represent distinct reasoning steps the agents performed correctly.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- **Question-embedded answers:** Sometimes the answer is contained within the question itself (e.g., a multiple-choice phrasing like \"Of X, Y, Z or W, it's where…\"). Check the question stem before searching the context extensively.",
+        "content": "- **Fractional/percentage approximation:** When a question uses a fraction or approximate quantity (e.g., \"about 1/5,\" \"roughly a third\"), convert it to a percentage and select the entity in the context whose stated proportion is **closest** to that value. An exact numerical match is not required."
+      },
+      {
+        "op": "insert_after",
+        "target": "- Questions may use **playful or colloquial references** (e.g., \"peachy state\" → Georgia; \"this country's Bharat Ratna\" → India). Resolve the indirect reference by matching the descriptive clue to the standard name found in context.",
+        "content": "- **Shared-element wordplay:** When a Jeopardy clue uses wordplay that references multiple titles, works, or names (e.g., \"In '84 he's a destroyer, in '82 he was just a barbarian\"), the answer is the **common element** shared across all references (here, \"Conan\" from both movie titles). Identify the thread that connects all the wordplay elements rather than answering with one of the individual references."
+      }
+    ]
+  },
+  "source_type": "success"
+}

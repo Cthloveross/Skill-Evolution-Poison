@@ -18,6 +18,7 @@ class CanaryDataLoader(SplitDataLoader):
         exposure_path: str,
         washout_path: str = "",
         washout_start_epoch: int = 10**9,
+        train_size_override: int | None = None,
         split_seed: int = 42,
         seed: int = 42,
         limit: int = 0,
@@ -35,6 +36,11 @@ class CanaryDataLoader(SplitDataLoader):
         self.washout_path = str(washout_path)
         self.washout_start_epoch = int(washout_start_epoch)
         self.washout_items: list[dict[str, Any]] = []
+        self.train_size_override = (
+            int(train_size_override) if train_size_override is not None else None
+        )
+        if self.train_size_override is not None and self.train_size_override <= 0:
+            raise ValueError("train_size_override must be positive when provided")
 
     def setup(self, cfg: dict) -> None:
         super().setup(cfg)
@@ -52,6 +58,11 @@ class CanaryDataLoader(SplitDataLoader):
                     f"Washout file must contain a non-empty JSON list: {self.washout_path}"
                 )
             self.washout_items = washout
+
+    def get_train_size(self) -> int:
+        if self.train_size_override is not None:
+            return self.train_size_override
+        return super().get_train_size()
 
     def plan_train_epoch(
         self,

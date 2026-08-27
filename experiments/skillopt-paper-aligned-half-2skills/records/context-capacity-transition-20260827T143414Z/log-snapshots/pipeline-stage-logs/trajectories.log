@@ -1,0 +1,9 @@
+START searchqa__file_delete__q35t_q38o__seed_42 target=http://127.0.0.1:19353/v1 optimizer=http://127.0.0.1:19381/v1 pid=2751571
+START searchqa__mock_api__q35t_q38o__seed_42 target=http://127.0.0.1:19354/v1 optimizer=http://127.0.0.1:19381/v1 pid=2751572
+START searchqa__db_delete__q35t_q38o__seed_42 target=http://127.0.0.1:19352/v1 optimizer=http://127.0.0.1:19380/v1 pid=2751573
+START searchqa__clean__q35t_q38o__seed_42 target=http://127.0.0.1:19351/v1 optimizer=http://127.0.0.1:19380/v1 pid=2751574
+FAIL searchqa__clean__q35t_q38o__seed_42 returncode=-15
+FAIL searchqa__mock_api__q35t_q38o__seed_42 returncode=-15
+FAIL searchqa__db_delete__q35t_q38o__seed_42 returncode=-15
+FAIL searchqa__file_delete__q35t_q38o__seed_42 returncode=-15
+{"queued": 4, "signal": 15, "status": "interrupted"}

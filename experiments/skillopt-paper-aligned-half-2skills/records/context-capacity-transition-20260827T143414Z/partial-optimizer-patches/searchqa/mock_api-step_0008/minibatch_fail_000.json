@@ -1,0 +1,51 @@
+{
+  "batch_size": 7,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agent ignores explicit possessive/relational rule (answers grandfather instead of grandson) and company short-name rule (uses 'McCormick & Company' instead of 'McCormick')."
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "No rule for 'this organization's [sub-entity]' (answer is the organization, not the sub-entity) or 'like [specific person]' (answer is the role, not the person)."
+    },
+    {
+      "failure_type": "answer_format",
+      "count": 1,
+      "description": "Agent gives full bilingual title 'Il Postino: The Postman' instead of the primary/original title 'Il Postino'."
+    },
+    {
+      "failure_type": "other",
+      "count": 2,
+      "description": "Agent selects wrong entity from context (oxalate ion vs hydrogen peroxide; 'international match' vs 'the test')."
+    }
+  ],
+  "patch": {
+    "reasoning": "The batch shows two dominant patterns: (1) the agent answers with the POSSESSED entity instead of the POSSESSOR (Hall of Fame instead of LPGA; grandfather instead of grandson), and (2) the agent fails to recognize when a question asks for a ROLE rather than a specific person ('like Ben Bradlee' → 'the editor'). Additionally, the company short-name rule is being ignored, and title answers include unnecessary English subtitles. I'll expand the possessive rule, add a role-identification rule, reinforce the company name rule, and add a title-format rule.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "- **Possessive / relational phrases:** \"his grandfather, the adding machine inventor\" → the answer is the *person who has* that grandfather, not the grandfather himself.",
+        "content": "- **Possessive / relational phrases:** The answer is the POSSESSOR (the entity that OWNS or HAS the described thing), NOT the possessed thing itself.\n  - \"his grandfather, the adding machine inventor\" → the answer is the *person who has* that grandfather (William S. Burroughs), NOT the grandfather (William Seward Burroughs).\n  - \"Nancy Lopez & Beth Daniel are in **this organization's** Hall of Fame, founded in 1967\" → the answer is the *organization* (LPGA), NOT the Hall of Fame. The possessive \"this organization's\" tells you the answer is the organization that owns the Hall of Fame.\n  - \"the [sub-entity] of this [entity]\" → answer is the [entity], not the [sub-entity]."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Role descriptors:** \"this *former first lady*\" → the answer must be someone who held the role of first lady, not a president mentioned in the same passage.",
+        "content": "- **\"Like [specific person]\" / \"such as [specific person]\" indicates the answer is a ROLE or CATEGORY, not the named person.** When the question says \"A 'letter to' this person, **like Ben Bradlee**, should…\" or \"this role, **like a CEO**…\", the named individual is an EXAMPLE of the role. The answer is the role/title itself (e.g., \"the editor\"), not the specific person or another person who performed the action.\n  - \"A 'letter to' this person, like Ben Bradlee, should rattle on…\" → \"the editor\" (the role Ben Bradlee held), NOT \"Janet Cooke\" (the person who wrote a letter to him)."
+      },
+      {
+        "op": "replace",
+        "target": "- **Company or organization:** use the common short name (e.g., \"McCormick\", not \"McCormick & Company, Incorporated\").",
+        "content": "- **Company or organization:** use the common short name (e.g., \"McCormick\", not \"McCormick & Company, Incorporated\" or \"McCormick & Company\"). Strip legal suffixes (& Company, Inc., Incorporated, Ltd., Corporation) AND the \"& Company\" portion. If the context refers to the company by its full legal name, still answer with just the brand/short name. The Jeopardy answer is always the shortest common form."
+      },
+      {
+        "op": "insert_after",
+        "target": "- **Show, book, or title:** just the title (e.g., \"What's Happening\", not a sentence describing it).",
+        "content": "- **Use the primary/original title, not a bilingual or expanded form.** If a film/book has both a foreign-language original title and an English subtitle (e.g., \"Il Postino: The Postman\"), answer with the original/primary title only (\"Il Postino\"). The English subtitle is a translation aid, not part of the canonical title. Similarly, if the context consistently uses one form of a title, use that form."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

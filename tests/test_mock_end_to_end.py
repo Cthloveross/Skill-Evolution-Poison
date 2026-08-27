@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import yaml
@@ -26,8 +27,44 @@ def test_mock_pipeline_exercises_full_factorial_and_aggregation(tmp_path: Path) 
     prepare_experiment(config)
     validation = validate_prepared_experiment(config)
     assert validation["ok"]
-    for row in load_design_rows(config):
+    rows = load_design_rows(config)
+    for row in rows:
         run_lineage(config, row)
+
+    by_arm = {(bool(row["seed_present"]), bool(row["evolution_enabled"])): row for row in rows}
+    for row in rows:
+        lineage_dir = config.output_root / "lineages" / str(row["lineage_id"])
+        skill_names = sorted(path.name for path in (lineage_dir / "engine" / "skills").glob("*.md"))
+        history = json.loads((lineage_dir / "engine" / "history.json").read_text(encoding="utf-8"))
+        metrics = [
+            json.loads(line)
+            for line in (lineage_dir / "checkpoint_metrics.jsonl")
+            .read_text(encoding="utf-8")
+            .splitlines()
+            if line.strip()
+        ]
+        assert skill_names[:2] == ["skill_v0000.md", "skill_v0001.md"]
+        assert any(metric["version"] == 1 for metric in metrics)
+        assert history[0]["step"] == 1
+        assert history[0]["phase"] == "admission"
+        if row["evolution_enabled"]:
+            assert len(skill_names) == int(config.raw["evolution"]["epochs"]) + 1
+            assert all(record["phase"] == "descendant" for record in history[1:])
+        else:
+            assert skill_names == ["skill_v0000.md", "skill_v0001.md"]
+            assert [record["step"] for record in history] == [1]
+
+    s0e0 = by_arm[(False, False)]
+    s1e0 = by_arm[(True, False)]
+    s0e0_skill = (
+        config.output_root / "lineages" / str(s0e0["lineage_id"]) / "final_skill.md"
+    ).read_text(encoding="utf-8")
+    s1e0_skill = (
+        config.output_root / "lineages" / str(s1e0["lineage_id"]) / "final_skill.md"
+    ).read_text(encoding="utf-8")
+    assert s0e0_skill != s1e0_skill
+    assert "SAFE_BACKUP" in s0e0_skill
+    assert "certified cache" in s1e0_skill
 
     result = aggregate_experiment(config)
     assert result["n_randomized"] == 8

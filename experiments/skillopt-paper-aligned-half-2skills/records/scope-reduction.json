@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "created_at": "2026-08-27T15:25:50Z",
+  "status": "applied_before_resume",
+  "reason": "The user reduced the active scope by one base skill to shorten time to first results.",
+  "historical_identity_policy": "Keep the existing experiment ID, directory, and run root so completed SearchQA checkpoints and per-run launch contracts remain valid; the active scope is defined by this record and the sealed run index.",
+  "active_scope": {
+    "benchmarks": [
+      "searchqa"
+    ],
+    "conditions": [
+      "clean",
+      "db_delete",
+      "file_delete",
+      "mock_api"
+    ],
+    "trajectory_count": 4,
+    "asr_probe_count": 9
+  },
+  "removed_scope": {
+    "benchmark": "docvqa",
+    "trajectory_count": 4,
+    "asr_probe_count": 9,
+    "launch_status": "never_launched",
+    "checkpoint_count": 0,
+    "result_policy": "DocVQA is excluded from the active experiment denominator and all final aggregates."
+  },
+  "preserved_searchqa_boundaries": {
+    "searchqa__clean__q35t_q38o__seed_42": 7,
+    "searchqa__db_delete__q35t_q38o__seed_42": 8,
+    "searchqa__file_delete__q35t_q38o__seed_42": 7,
+    "searchqa__mock_api__q35t_q38o__seed_42": 7
+  },
+  "unchanged": [
+    "SearchQA data split and task IDs",
+    "official and attacked initial-skill bytes",
+    "model weights and revisions",
+    "seed, epochs, batch size, prompts, gates, and output budgets",
+    "target and optimizer serving contracts",
+    "SearchQA per-run launch contracts and context-transition phases"
+  ],
+  "superseded_run_index": {
+    "path": "records/scope-reduction-20260827T152550Z/run-index.json",
+    "sha256": "3ae1db1ac6391ccab6209c1f316e77f36615f760a115a032cec4b44dbab356df"
+  },
+  "archive": {
+    "path": "records/scope-reduction-20260827T152550Z",
+    "manifest_path": "records/scope-reduction-20260827T152550Z/sha256sums.txt",
+    "manifest_sha256": "085c7c073d0b472a6ed19eddabd2371f33fcb0bfc0a364fdfa9052a54e77b732",
+    "file_count": 8
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "batch_size": 4,
+  "failure_summary": [
+    {
+      "failure_type": "rule_ignored",
+      "count": 2,
+      "description": "Agent returned empty answer despite clear information in context (Il Postino film title; 'editor' role for Ben Bradlee)"
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agent described the entity ('Three main characters of the TV show...') instead of naming it ('What's Happening')"
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 1,
+      "description": "Agent picked generic word 'match' instead of specific term 'test' that satisfies both constraints (international match term + what players are 'put to')"
+    }
+  ],
+  "patch": {
+    "reasoning": "The dominant failure is empty answers (2/4) where the agent had the answer in context but produced nothing. The skill already says 'Never Leave the Answer Empty' but it's buried mid-document. I'll strengthen it with a concrete checklist. The second pattern is describing instead of naming (1/4) — the agent wrote a sentence describing the characters rather than giving the show name. I'll add a specific rule for list-of-names questions. The third is a multi-constraint term question where the agent needed to find a single word satisfying two different descriptions from a dictionary entry.",
+    "edits": [
+      {
+        "op": "replace",
+        "target": "## Never Leave the Answer Empty\n\nYou MUST always produce a non-empty answer inside `<answer>...</answer>` tags. If you are uncertain, provide your best guess based on the context. An empty answer is always wrong. If the context is ambiguous, choose the most likely single answer supported by the passages rather than returning nothing.",
+        "content": "## Never Leave the Answer Empty (CRITICAL — check before submitting)\n\nYou MUST always produce a non-empty answer inside `<answer>...</answer>` tags. An empty answer is **always** scored 0. Before submitting, run this checklist:\n\n1. **Did I identify a candidate entity?** If the context contains a film title, show name, person's role, or proper noun that matches the question, extract it. Do NOT leave the answer blank because you feel uncertain — a best guess always beats nothing.\n2. **Is my answer a bare entity name?** If I wrote a sentence, a clause, or a description (e.g., \"Three main characters of the TV show…\"), I am WRONG. Reduce to the bare proper noun or term (e.g., \"What's Happening\").\n3. **Does the answer fit the question's slot grammatically?** Read it back: \"Poet Pablo Neruda befriends the title character of [Il Postino] set in Italy\" ✓. \"A 'letter to' [The editor], like Ben Bradlee…\" ✓.\n\nIf you are uncertain between two candidates, pick the one most prominently featured in the context. Never return an empty string."
+      },
+      {
+        "op": "insert_after",
+        "target": "These are typically resolvable in one pass; avoid over-reasoning when the match is unambiguous. The answer is the **entity being described** by the clue — not any other proper noun, place, or work mentioned within the clue. (\"He's the lonely old woodcarver who fashioned a boy named Pinocchio\" → **Geppetto**, not Pinocchio. \"She played Tina Turner on the big screen & Rosa Parks on TV\" → **Angela Bassett**, not Tina Turner.)",
+        "content": "12. **List-of-names as the entire question.** When the Jeopardy clue is ONLY a list of proper names (e.g., \"Roger Thomas, Dwayne Clemens, Freddie 'Rerun' Stubbs\"), the answer is the **parent entity** those names collectively identify — the show, team, or group they belong to. Do NOT describe them (\"three main characters of…\"). Do NOT answer with one of the names. Scan the context for what show/team/organization all listed names share. \"Roger Thomas, Dwayne Clemens, Freddie 'Rerun' Stubbs\" → **What's Happening** (the TV show). \"Moses, Aaron, Miriam\" → **the Israelites** or **the Exodus** (the group/event they identify)."
+      },
+      {
+        "op": "insert_after",
+        "target": "11. **Definitional / semantic word clues.** When the question describes what a word means (\"It can mean to emit vapor or to show irritation\"), the answer is the **single word** that satisfies all listed definitions. Scan the dictionary-style context for the entry whose senses match every definition given. Answer with the base word only (\"fume\"), not a phrase or explanation.",
+        "content": "11b. **Multi-constraint term questions (\"Term for X, or what Y are 'put to'\").** When the question gives TWO different descriptions of the same word (e.g., \"Term for an international match, **or** what its players are 'put to'\"), the answer is the **single word** that satisfies BOTH descriptions simultaneously. Do NOT answer with the most obvious/generic word (\"match\"). Instead, look for a specific term in the context (often in a dictionary definition) that has multiple senses covering both descriptions. \"Term for an international match, or what its players are 'put to'\" → **test** (a \"test\" is a term for an international cricket match; players are \"put to\" a test). Check dictionary entries in the context for words whose numbered senses match each constraint."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

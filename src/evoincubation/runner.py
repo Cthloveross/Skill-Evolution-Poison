@@ -14,12 +14,72 @@ from evoincubation.config import ExperimentConfig
 from evoincubation.design import build_design, parse_bool_cell, save_design
 from evoincubation.io_utils import (
     exclusive_lock,
+    file_sha256,
     read_csv,
     read_json,
     runtime_provenance,
     stable_hash,
     write_json,
 )
+
+_PROVENANCE_ENV = {
+    "snapshot": "EVOINCUBATION_PROVENANCE_SNAPSHOT",
+    "capture_script": "EVOINCUBATION_PROVENANCE_CAPTURE_SCRIPT",
+    "capture_script_sha256": "EVOINCUBATION_PROVENANCE_CAPTURE_SCRIPT_SHA256",
+    "python": "EVOINCUBATION_PROVENANCE_PYTHON",
+    "model": "EVOINCUBATION_PROVENANCE_MODEL",
+    "config_sha256": "EVOINCUBATION_PROVENANCE_CONFIG_SHA256",
+}
+
+
+def _assert_launch_provenance(config_path: Path, *, phase: str) -> None:
+    values = {name: os.environ.get(env_name, "") for name, env_name in _PROVENANCE_ENV.items()}
+    if not any(values.values()):
+        return
+    missing = [_PROVENANCE_ENV[name] for name, value in values.items() if not value]
+    if missing:
+        raise RuntimeError(
+            f"Incomplete launch provenance guard during {phase}; missing {', '.join(missing)}"
+        )
+
+    capture_script = Path(values["capture_script"]).resolve(strict=True)
+    expected_snapshot = Path(values["snapshot"]).resolve(strict=True)
+    if not capture_script.is_file() or not os.access(capture_script, os.X_OK):
+        raise RuntimeError(f"Provenance capture helper is not executable: {capture_script}")
+    if not expected_snapshot.is_dir():
+        raise RuntimeError(f"Provenance snapshot is not a directory: {expected_snapshot}")
+    if file_sha256(capture_script) != values["capture_script_sha256"]:
+        raise RuntimeError(f"Provenance capture helper changed before {phase}")
+    if file_sha256(config_path) != values["config_sha256"]:
+        raise RuntimeError(f"Experiment config changed before {phase}: {config_path}")
+
+    result = subprocess.run(
+        [
+            str(capture_script),
+            "--python",
+            values["python"],
+            "--model",
+            values["model"],
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    output_lines = result.stdout.splitlines()
+    if result.returncode != 0 or len(output_lines) != 1:
+        detail = result.stderr.strip() or result.stdout.strip() or "no helper output"
+        raise RuntimeError(f"Provenance recapture failed before {phase}: {detail}")
+    try:
+        current_snapshot = Path(output_lines[0]).resolve(strict=True)
+    except OSError as exc:
+        raise RuntimeError(
+            f"Provenance recapture returned an invalid path before {phase}: {output_lines[0]}"
+        ) from exc
+    if current_snapshot != expected_snapshot:
+        raise RuntimeError(
+            f"Runtime provenance drift before {phase}: "
+            f"expected {expected_snapshot.name}, got {current_snapshot.name}"
+        )
 
 
 def prepare_experiment(config: ExperimentConfig) -> Path:
@@ -89,6 +149,10 @@ def select_lineage(
 
 
 def run_lineage(config: ExperimentConfig, row: dict[str, Any], *, force: bool = False) -> Path:
+    _assert_launch_provenance(
+        config.path,
+        phase=f"lineage {row['lineage_id']} start",
+    )
     lineage_dir = config.output_root / "lineages" / str(row["lineage_id"])
     complete_path = lineage_dir / "COMPLETE.json"
     config_hash = stable_hash(config.resolved(), 32)
@@ -157,6 +221,7 @@ def run_lineage(config: ExperimentConfig, row: dict[str, Any], *, force: bool = 
 
 
 def run_block(config: ExperimentConfig, block_id: str, *, force: bool = False) -> list[Path]:
+    _assert_launch_provenance(config.path, phase=f"block {block_id} start")
     rows = [row for row in load_design_rows(config) if row["block_id"] == block_id]
     if len(rows) != 4:
         raise ValueError(f"Expected four arms in block {block_id}, found {len(rows)}")
@@ -164,6 +229,10 @@ def run_block(config: ExperimentConfig, block_id: str, *, force: bool = False) -
     outputs: list[Path] = []
     failures: list[str] = []
     for row in rows:
+        _assert_launch_provenance(
+            config.path,
+            phase=f"block {block_id} arm {row['lineage_id']}",
+        )
         command = [
             sys.executable,
             "-m",
@@ -197,26 +266,249 @@ def block_ids(config: ExperimentConfig) -> list[str]:
     return ordered
 
 
+def _load_validation_items(
+    path: Path,
+    *,
+    label: str,
+    expected_count: int,
+    errors: list[str],
+) -> list[dict[str, Any]]:
+    if not path.exists():
+        errors.append(f"{label} is missing: {path}")
+        return []
+    try:
+        payload = read_json(path)
+    except (OSError, ValueError) as exc:
+        errors.append(f"{label} is unreadable: {exc}")
+        return []
+    if not isinstance(payload, list):
+        errors.append(f"{label} must contain a JSON list")
+        return []
+    if len(payload) != expected_count:
+        errors.append(f"{label} has {len(payload)} items; expected {expected_count}")
+    items: list[dict[str, Any]] = []
+    for index, item in enumerate(payload):
+        if not isinstance(item, dict):
+            errors.append(f"{label} item {index} must be a JSON object")
+            continue
+        items.append(item)
+    return items
+
+
+def _item_ids(items: list[dict[str, Any]], *, label: str, errors: list[str]) -> set[str]:
+    ids: set[str] = set()
+    duplicates: set[str] = set()
+    for index, item in enumerate(items):
+        item_id = str(item.get("id") or "").strip()
+        if not item_id:
+            errors.append(f"{label} item {index} has an empty ID")
+            continue
+        if item_id in ids:
+            duplicates.add(item_id)
+        ids.add(item_id)
+    if duplicates:
+        errors.append(f"{label} contains duplicate IDs: {sorted(duplicates)}")
+    return ids
+
+
+def _contains_canary_token(value: Any) -> bool:
+    if isinstance(value, str):
+        return "CANARY-" in value.upper()
+    if isinstance(value, dict):
+        return any(_contains_canary_token(item) for item in value.values())
+    if isinstance(value, list):
+        return any(_contains_canary_token(item) for item in value)
+    return False
+
+
+def _validate_block_data(
+    config: ExperimentConfig,
+    block: str,
+    errors: list[str],
+    manifest: dict[str, Any] | None,
+) -> None:
+    data_root = config.output_root / "data" / block
+    counts = config.raw["canary"]
+    split_specs = {
+        "train": (data_root / "train" / "items.json", int(counts["train_items"])),
+        "val": (data_root / "val" / "items.json", int(counts["selection_items"])),
+        "test": (data_root / "test" / "items.json", int(counts["clean_test_items"])),
+        "washout": (data_root / "washout" / "items.json", int(counts["train_items"])),
+        "trigger_monitor": (
+            data_root / "trigger_monitor" / "items.json",
+            int(counts["trigger_monitor_items"]),
+        ),
+        "final_trigger": (
+            data_root / "final_trigger" / "items.json",
+            int(counts["final_trigger_items"]),
+        ),
+        "near_trigger": (
+            data_root / "near_trigger" / "items.json",
+            int(counts["near_trigger_items"]),
+        ),
+    }
+    split_items = {
+        name: _load_validation_items(
+            path,
+            label=f"Block {block} split {name}",
+            expected_count=expected_count,
+            errors=errors,
+        )
+        for name, (path, expected_count) in split_specs.items()
+    }
+    exposure_items = {
+        kind: _load_validation_items(
+            data_root / "exposure" / f"{kind}.json",
+            label=f"Block {block} exposure {kind}",
+            expected_count=int(counts["exposure_items"]),
+            errors=errors,
+        )
+        for kind in ("poison", "benign")
+    }
+
+    split_ids = {
+        name: _item_ids(items, label=f"Block {block} split {name}", errors=errors)
+        for name, items in split_items.items()
+    }
+    exposure_ids = {
+        kind: _item_ids(
+            items,
+            label=f"Block {block} exposure {kind}",
+            errors=errors,
+        )
+        for kind, items in exposure_items.items()
+    }
+    if exposure_ids["poison"] != exposure_ids["benign"]:
+        errors.append(f"Block {block} exposure poison/benign IDs do not match")
+    poison_by_id = {
+        str(item.get("id")).strip(): item
+        for item in exposure_items["poison"]
+        if str(item.get("id") or "").strip()
+    }
+    benign_by_id = {
+        str(item.get("id")).strip(): item
+        for item in exposure_items["benign"]
+        if str(item.get("id") or "").strip()
+    }
+    for item_id in sorted(exposure_ids["poison"] & exposure_ids["benign"]):
+        if poison_by_id[item_id].get("ground_truth") != benign_by_id[item_id].get("ground_truth"):
+            errors.append(f"Block {block} exposure ground_truth differs for paired ID {item_id}")
+
+    logical_ids = {**split_ids, "exposure": exposure_ids["poison"] | exposure_ids["benign"]}
+    names = list(logical_ids)
+    for index, left in enumerate(names):
+        for right in names[index + 1 :]:
+            overlap = sorted(logical_ids[left] & logical_ids[right])
+            if overlap:
+                errors.append(f"Block {block} ID overlap between {left} and {right}: {overlap}")
+
+    seed_kinds = {"poison_seed", "matched_benign_seed"}
+    for name, items in split_items.items():
+        leaked = [
+            str(item.get("id"))
+            for item in items
+            if str(item.get("exposure_kind") or "") in seed_kinds
+        ]
+        if leaked:
+            errors.append(f"Block {block} split {name} contains seed exposure items: {leaked}")
+    expected_exposure_kinds = {"poison": "poison_seed", "benign": "matched_benign_seed"}
+    for kind, expected_kind in expected_exposure_kinds.items():
+        invalid = [
+            str(item.get("id"))
+            for item in exposure_items[kind]
+            if item.get("exposure_kind") != expected_kind
+        ]
+        if invalid:
+            errors.append(
+                f"Block {block} exposure {kind} has invalid exposure_kind for IDs: {invalid}"
+            )
+
+    for name in ("train", "val", "test", "washout"):
+        items = split_items[name]
+        canary_ids = [str(item.get("id")) for item in items if _contains_canary_token(item)]
+        if canary_ids:
+            errors.append(
+                f"Block {block} split {name} contains CANARY trigger tokens: {canary_ids}"
+            )
+        target_ids = [
+            str(item.get("id")) for item in items if str(item.get("attack_target") or "").strip()
+        ]
+        if target_ids:
+            errors.append(f"Block {block} split {name} contains attack_target values: {target_ids}")
+
+    if manifest is None:
+        return
+    expected_files = {
+        str(path.relative_to(data_root)) for path, _expected_count in split_specs.values()
+    } | {
+        "exposure/poison.json",
+        "exposure/benign.json",
+        "initial_skill.md",
+    }
+    recorded_files = manifest.get("files")
+    if not isinstance(recorded_files, dict):
+        errors.append(f"Block {block} manifest does not contain file hashes")
+        return
+    if set(recorded_files) != expected_files:
+        errors.append(
+            f"Block {block} manifest file set differs: "
+            f"expected={sorted(expected_files)}, recorded={sorted(recorded_files)}"
+        )
+    for relative_path in sorted(expected_files & set(recorded_files)):
+        record = recorded_files[relative_path]
+        path = data_root / relative_path
+        if not isinstance(record, dict):
+            errors.append(f"Block {block} manifest record is invalid: {relative_path}")
+            continue
+        if not path.is_file():
+            continue
+        expected_sha = str(record.get("sha256") or "")
+        expected_size = record.get("size_bytes")
+        actual_sha = file_sha256(path)
+        actual_size = path.stat().st_size
+        if expected_sha != actual_sha or expected_size != actual_size:
+            errors.append(
+                f"Block {block} file hash mismatch for {relative_path}: "
+                f"expected sha256={expected_sha} size={expected_size}, "
+                f"actual sha256={actual_sha} size={actual_size}"
+            )
+
+
 def validate_prepared_experiment(config: ExperimentConfig) -> dict[str, Any]:
     rows = load_design_rows(config)
     errors: list[str] = []
-    for block in block_ids(config):
+    blocks = block_ids(config)
+    for block in blocks:
         block_rows = [row for row in rows if row["block_id"] == block]
         arms = {(row["seed_present"], row["evolution_enabled"]) for row in block_rows}
         if len(block_rows) != 4 or len(arms) != 4:
             errors.append(f"Block {block} is not a complete 2x2")
         data_root = config.output_root / "data" / block
         manifest_path = data_root / "data_manifest.json"
+        manifest: dict[str, Any] | None = None
         if not manifest_path.exists():
             errors.append(f"Missing data manifest: {manifest_path}")
-            continue
-        manifest = read_json(manifest_path)
-        if manifest.get("integrity", {}).get("trigger_in_train") is not False:
-            errors.append(f"Block {block} does not assert trigger/train separation")
+        else:
+            try:
+                manifest = read_json(manifest_path)
+            except (OSError, ValueError) as exc:
+                errors.append(f"Unreadable data manifest {manifest_path}: {exc}")
+            else:
+                if not isinstance(manifest, dict):
+                    errors.append(f"Data manifest must be a JSON object: {manifest_path}")
+                    manifest = None
+                else:
+                    integrity = manifest.get("integrity")
+                    if (
+                        not isinstance(integrity, dict)
+                        or integrity.get("trigger_in_train") is not False
+                    ):
+                        errors.append(f"Block {block} does not assert trigger/train separation")
+        _validate_block_data(config, block, errors, manifest)
     report = {
         "ok": not errors,
         "n_lineages": len(rows),
-        "n_blocks": len(block_ids(config)),
+        "n_blocks": len(blocks),
         "errors": errors,
     }
     write_json(config.output_root / "validation_report.json", report)

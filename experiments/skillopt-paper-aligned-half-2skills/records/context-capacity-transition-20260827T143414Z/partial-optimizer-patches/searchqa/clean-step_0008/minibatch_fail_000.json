@@ -1,0 +1,41 @@
+{
+  "batch_size": 6,
+  "failure_summary": [
+    {
+      "failure_type": "answer_format",
+      "count": 3,
+      "description": "Agent gives wrong name/title form: missing state in Jeopardy answer (Anchorage vs Anchorage, Alaska), expanded English title instead of original (Il Postino: The Postman vs Il Postino), full company name instead of short form (McCormick & Company vs McCormick)"
+    },
+    {
+      "failure_type": "rule_ignored",
+      "count": 1,
+      "description": "Agent used 'McCormick & Company' despite explicit skill rule to use short common name 'McCormick'"
+    },
+    {
+      "failure_type": "rule_missing",
+      "count": 2,
+      "description": "Agent misidentifies the target entity: answers the relative (grandfather) instead of the main subject, or picks a word matching only one of two converging clues instead of the term satisfying both"
+    }
+  ],
+  "patch": {
+    "reasoning": "Three of six failures are answer-format mismatches where the agent found the right entity but used the wrong form (missing state, expanded title, full company name). Two failures involve misidentifying which entity the question targets (the relative vs. the main subject; a word matching one clue vs. the word matching both). One is a pure rule-ignored case. The most impactful edits: (1) a rule to match the exact Jeopardy/source answer format when explicitly present, (2) a rule for possessive/relative constructions where the answer is the main subject not the relative, and (3) a rule for dual-clue convergence requiring a single term satisfying all clues.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "- For Jeopardy-style questions (a bare phrase, a list of names, or a description with no explicit interrogative), identify the single entity (show, event, person, place) that all clues converge on. Do not restate or describe the clue; give the entity name.",
+        "content": "- **Match the source answer format exactly:** When the context contains an explicit Jeopardy Q→A pair (e.g., a line ending with \"| Anchorage, Alaska\" or a flashcard showing the answer), reproduce that answer verbatim—including state names, original-language titles, and punctuation. Do not shorten \"Anchorage, Alaska\" to \"Anchorage,\" and do not expand an original title like \"Il Postino\" to its English subtitle \"Il Postino: The Postman.\" The Jeopardy answer key IS the expected answer."
+      },
+      {
+        "op": "insert_after",
+        "target": "- Re-read the question's grammatical structure: what is the subject, and what is being asked about it?",
+        "content": "- **Possessive/relative clauses describe the answer, not ARE the answer:** When a question says \"his grandfather, the adding machine inventor, would have thought of *Naked Lunch*,\" the answer is the person who wrote *Naked Lunch* (the grandson), NOT the grandfather. The relative clause (\"his grandfather\") provides a identifying detail about the answer's family, but the answer is the main subject of the sentence. Similarly, \"the city where her mother was born\" asks for the city, not the mother."
+      },
+      {
+        "op": "insert_after",
+        "target": "When a question is a definition or Jeopardy-style clue, prefer the term that most directly and simply matches the wording of the clue. If the clue says \"a double that visually resembles another,\" and the context defines \"look-alike\" as \"a person or thing that looks like or closely resembles another; double,\" then \"look-alike\" is the better answer than the more technical \"body double.\" Choose the simplest term whose definition aligns with the clue's phrasing.",
+        "content": "- **Dual-clue convergence:** When a question presents two clues joined by \"or\" (e.g., \"Term for an international match, or what its players are 'put to'\"), the answer must be a SINGLE word/term that satisfies BOTH clues simultaneously. Do not pick a word that matches only one clue (e.g., \"hearing\" matches \"put to\" in a legal sense but not \"international match\"). Look for the term that is the standard name for the first concept AND naturally collocates with the second phrase (e.g., \"test\" = a type of international cricket match AND players are \"put to the test\")."
+      }
+    ]
+  },
+  "source_type": "failure"
+}

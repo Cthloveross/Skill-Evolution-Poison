@@ -1,0 +1,79 @@
+{
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "incidents": [],
+  "pipeline_version": "skillopt-paper-aligned-half-2skills-pipeline-v2",
+  "schema_version": 2,
+  "stages": {
+    "qualification-optimizer": {
+      "attempt": 1,
+      "command": [
+        "/work/tc442/venvs/qwen38/bin/python",
+        "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/scripts/qualify_endpoint.py",
+        "--port",
+        "19380",
+        "--output",
+        "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/qualification-19380.json"
+      ],
+      "finished_at": "2026-08-27T03:56:24.314689+00:00",
+      "log": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/logs/pipeline/qualification-optimizer.log",
+      "returncode": 0,
+      "started_at": "2026-08-27T03:53:15.236328+00:00",
+      "status": "completed"
+    },
+    "qualification-target": {
+      "attempt": 1,
+      "command": [
+        "/work/tc442/venvs/qwen38/bin/python",
+        "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/scripts/qualify_endpoint.py",
+        "--port",
+        "19351",
+        "--output",
+        "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/records/qualification-19351.json"
+      ],
+      "finished_at": "2026-08-27T03:53:15.178698+00:00",
+      "log": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/logs/pipeline/qualification-target.log",
+      "returncode": 0,
+      "started_at": "2026-08-27T03:51:29.298566+00:00",
+      "status": "completed"
+    },
+    "trajectories": {
+      "attempt": 1,
+      "command": [
+        "/work/tc442/venvs/skillopt-repro-9639719/bin/python",
+        "/home/tc442/projects/Skill-Evolution-Poison/experiments/skillopt-paper-aligned-half-2skills/scripts/run_matrix.py",
+        "--cell-timeout-seconds",
+        "172800",
+        "--target-endpoint",
+        "http://127.0.0.1:19351/v1",
+        "--target-endpoint",
+        "http://127.0.0.1:19352/v1",
+        "--target-endpoint",
+        "http://127.0.0.1:19353/v1",
+        "--target-endpoint",
+        "http://127.0.0.1:19354/v1",
+        "--only",
+        "searchqa__clean__q35t_q38o__seed_42",
+        "--only",
+        "searchqa__db_delete__q35t_q38o__seed_42",
+        "--only",
+        "searchqa__file_delete__q35t_q38o__seed_42",
+        "--only",
+        "searchqa__mock_api__q35t_q38o__seed_42",
+        "--only",
+        "docvqa__clean__q35t_q38o__seed_42",
+        "--only",
+        "docvqa__db_delete__q35t_q38o__seed_42",
+        "--only",
+        "docvqa__file_delete__q35t_q38o__seed_42",
+        "--only",
+        "docvqa__mock_api__q35t_q38o__seed_42"
+      ],
+      "log": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/logs/pipeline/trajectories.log",
+      "started_at": "2026-08-27T03:56:24.392142+00:00",
+      "status": "running"
+    }
+  },
+  "started_at": "2026-08-27T03:49:58.650805+00:00",
+  "status": "running",
+  "updated_at": "2026-08-27T03:56:24.392167+00:00"
+}

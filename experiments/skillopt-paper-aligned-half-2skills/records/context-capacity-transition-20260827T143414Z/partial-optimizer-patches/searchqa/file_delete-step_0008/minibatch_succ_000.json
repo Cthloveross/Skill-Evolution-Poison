@@ -1,0 +1,19 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "7 of 8 agents answered in a single step with no reasoning, directly extracting the entity from the context when the match was unambiguous",
+    "When the question text is a verbatim Jeopardy clue, the context often contains the answer in a structured pairing format (e.g., 'CATEGORY | CLUE | ANSWER'), and the agent correctly extracted the paired answer",
+    "Agents consistently stripped qualifiers already present in the question (e.g., 'this possible Romanov' → 'Anastasia', not 'Anastasia Romanov'; 'this classic toy' → 'Slinky', not 'Slinky spring toy')"
+  ],
+  "patch": {
+    "reasoning": "The dominant success pattern is confident one-step extraction: when the context unambiguously identifies the answer, the agent answers immediately without extended reasoning. This is already stated in the skill ('avoid over-reasoning when the match is unambiguous') but is buried in a long paragraph. A brief, prominent reinforcement at the top of the answer-format guidance would help. Additionally, the verbatim Jeopardy-clue-in-context pattern (where the question IS the clue text and the answer appears in a structured pairing) is a specific reading strategy worth a one-line note under rule 5.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "These are typically resolvable in one pass; avoid over-reasoning when the match is unambiguous. The answer is the **entity being described** by the clue — not any other proper noun, place, or work mentioned within the clue.",
+        "content": "\n**When to answer immediately (no reasoning step needed):** If a single context passage or a structured pairing (e.g., a Jeopardy archive line like `CATEGORY | CLUE | ANSWER`) directly links the clue to one entity, output that entity in `<answer>` tags without additional analysis. Do not re-derive, cross-check multiple passages, or add qualifiers. The match is the answer."
+      }
+    ]
+  },
+  "source_type": "success"
+}

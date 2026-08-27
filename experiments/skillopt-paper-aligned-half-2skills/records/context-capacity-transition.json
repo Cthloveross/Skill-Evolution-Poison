@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "experiment_id": "skillopt-paper-aligned-half-2skills",
+  "created_at": "2026-08-27T14:34:14Z",
+  "status": "applied_before_resume",
+  "reason": "An optimizer analyst request exceeded the initial context admission limit and would otherwise be silently treated as zero edits.",
+  "overflow": {
+    "run_id": "searchqa__db_delete__q35t_q38o__seed_42",
+    "step": 9,
+    "minibatch": "minibatch_fail_000",
+    "endpoint": "http://127.0.0.1:19380/v1",
+    "input_tokens": 49385,
+    "requested_output_tokens": 16384,
+    "request_envelope_tokens": 65769,
+    "old_max_model_len": 65536,
+    "excess_tokens": 233,
+    "http_status": 400,
+    "retries": 3,
+    "checkpointed": false
+  },
+  "contract_change": {
+    "optimizer_max_model_len_before": 65536,
+    "optimizer_max_model_len_after": 131072,
+    "target_max_model_len": 65536,
+    "optimizer_output_token_limit": 16384,
+    "optimizer_qualification_prompt_tokens": 96000,
+    "optimizer_qualification_output_budget": 16384,
+    "unchanged": [
+      "model weights and revisions",
+      "thinking and reasoning effort",
+      "sampling parameters",
+      "data and seed",
+      "training schedule",
+      "selection gate",
+      "target serving contract"
+    ]
+  },
+  "skillopt_runtime": {
+    "base_revision": "9639719632daecacd1baaa47fe781f3c0253600a",
+    "trainer_before_sha256": "ff71a1480ee7c7c21a2574bb429eeb7dc0c88da0ea018feb22da4fa00b663a7f",
+    "trainer_after_sha256": "c8d19ba77fff0e034da0156b990eab5360f4e3317c316d5b22d46780b94e7d62",
+    "resume_change": "Rebuild each resumed epoch's step buffer from persisted trajectory_digest.json files; fail closed when a completed non-skip step lacks its digest."
+  },
+  "completed_step_boundaries": {
+    "searchqa__clean__q35t_q38o__seed_42": 7,
+    "searchqa__db_delete__q35t_q38o__seed_42": 8,
+    "searchqa__file_delete__q35t_q38o__seed_42": 7,
+    "searchqa__mock_api__q35t_q38o__seed_42": 7,
+    "docvqa__clean__q35t_q38o__seed_42": 0,
+    "docvqa__db_delete__q35t_q38o__seed_42": 0,
+    "docvqa__file_delete__q35t_q38o__seed_42": 0,
+    "docvqa__mock_api__q35t_q38o__seed_42": 0
+  },
+  "archived_launch_contracts": {
+    "searchqa__clean__q35t_q38o__seed_42": {
+      "path": "records/context-capacity-transition-20260827T143414Z/launch-contracts/searchqa/clean.json",
+      "sha256": "ba76a9b9a9af32072ca98b4561653e2637f951f0d05dc283cc6dc6435a22bfca"
+    },
+    "searchqa__db_delete__q35t_q38o__seed_42": {
+      "path": "records/context-capacity-transition-20260827T143414Z/launch-contracts/searchqa/db_delete.json",
+      "sha256": "ae7077a9ce5ec18ba4261ed274670f1d5cdef6b2a655cb306bf9e82819689779"
+    },
+    "searchqa__file_delete__q35t_q38o__seed_42": {
+      "path": "records/context-capacity-transition-20260827T143414Z/launch-contracts/searchqa/file_delete.json",
+      "sha256": "9e8ce88ce4932864fff7fbf60446087add656cf16bdcd0f8ef90d4764cb82ad6"
+    },
+    "searchqa__mock_api__q35t_q38o__seed_42": {
+      "path": "records/context-capacity-transition-20260827T143414Z/launch-contracts/searchqa/mock_api.json",
+      "sha256": "6dd9b567f49975f3bc974d3f21d86ef0a2bee9f2bd973edacb4c846d1c83d061"
+    }
+  },
+  "partial_step_policy": {
+    "retained_target_rollouts": {
+      "searchqa__clean__q35t_q38o__seed_42": 40,
+      "searchqa__db_delete__q35t_q38o__seed_42": 40,
+      "searchqa__file_delete__q35t_q38o__seed_42": 40,
+      "searchqa__mock_api__q35t_q38o__seed_42": 40
+    },
+    "archived_optimizer_patch_count": 11,
+    "policy": "Retain complete target rollouts because the target contract is unchanged; archive every optimizer patch from an incomplete step and regenerate all optimizer patches under the 131K contract."
+  },
+  "archive": {
+    "path": "records/context-capacity-transition-20260827T143414Z",
+    "manifest_path": "records/context-capacity-transition-20260827T143414Z/sha256sums.txt",
+    "manifest_sha256": "ce84cfb99e17e19883a4a390b0a87907782d04473b2b4237086b49d123051589",
+    "file_count": 32
+  }
+}

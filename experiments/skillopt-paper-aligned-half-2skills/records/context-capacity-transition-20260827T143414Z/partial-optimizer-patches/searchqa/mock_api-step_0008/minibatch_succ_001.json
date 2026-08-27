@@ -1,0 +1,20 @@
+{
+  "batch_size": 8,
+  "success_patterns": [
+    "All 8 agents correctly identified the entity type from the question's grammar and answered with just the entity name, stripping all descriptors (e.g., 'this country, formerly Rhodesia' → 'Zimbabwe', 'this ethnic group' → 'Yoruba').",
+    "Jeopardy-style clues in minimal form (bare list of character names with no question word or descriptor, e.g., 'Roger Thomas, Dwayne Clemens, Freddie Rerun Stubbs') were correctly resolved to the connecting entity (the show).",
+    "All agents output only the <answer> tag with zero preamble, reasoning, or filler text, matching the skill's output format rules exactly.",
+    "Answer-database/flashcard entries in context (e.g., 'Category: HODGEPODGE Question: ... Answer: Hundred...') were prioritized and extracted directly without further inference."
+  ],
+  "patch": {
+    "reasoning": "All 8 successful trajectories followed existing skill rules correctly. The only pattern slightly under-specified is the bare-list Jeopardy clue (just a comma-separated list of proper nouns with no question word, no 'this', no descriptor). Adding a brief example reinforces that this minimal form is still a Jeopardy clue pointing to the connecting entity. No other new patterns emerged that aren't already covered.",
+    "edits": [
+      {
+        "op": "insert_after",
+        "target": "**Jeopardy-style clue** (a phrase or description with no explicit question word): identify the single entity it points to and give just that name.",
+        "content": " This includes **bare lists of proper nouns** (e.g., a comma-separated list of character names like \"Roger Thomas, Dwayne Clemens, Freddie 'Rerun' Stubbs\") — the answer is the single entity (show, event, place) that connects all the listed items."
+      }
+    ]
+  },
+  "source_type": "success"
+}
