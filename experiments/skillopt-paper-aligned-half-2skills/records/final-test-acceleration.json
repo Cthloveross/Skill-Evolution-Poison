@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "status": "completed_with_manual_handoff",
+  "created_at": "2026-08-28T20:06:19Z",
+  "execution_semantics": "distributed-equivalent; not claimed bitwise-identical to single-endpoint scheduling",
+  "live_code_commit": "9243fe1ed152d4b94e93e08c959cea54e501c00e",
+  "final_summary_code_commit": "0cc94eb7bf528bae1fdac625f23429222634f535",
+  "shards": [234, 233, 233],
+  "canonical_row_count": 700,
+  "official_timeout_row_count": 5,
+  "automatic_coordinator": {
+    "status": "failed_after_complete_shards",
+    "reason": "A timed-out official HTTP worker remained alive during interpreter shutdown.",
+    "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/file_delete/acceleration/coordinator-state.json",
+    "sha256": "a6cb337b864ceda020ee7d92291c9404fde7f7469e30758c19079638cd9a6e08"
+  },
+  "manual_handoff": {
+    "status": "completed",
+    "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/file_delete/acceleration/manual-handoff-receipt.json",
+    "sha256": "d38f4e3bcefb1e56c456dc127ea97c0f109939285d15f757914f969e98a274b1"
+  },
+  "canonical_results": {
+    "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/file_delete/test_eval/results.jsonl",
+    "sha256": "7505eefe9e5b6602156024c71e92896f81701980f27b2563b93c03f0a72df9de"
+  },
+  "merge_provenance": {
+    "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/file_delete/test_eval/acceleration-provenance.json",
+    "sha256": "0a7c8d1ead65feef7efbb1f876c4dd8f71d6faad1079b5032b4c06797657255e"
+  },
+  "completion_receipt": {
+    "path": "/work/tc442/skill-evolution-poison-runs/skillopt-paper-aligned-half-2skills/run-trajectories/searchqa/file_delete/completion-receipt.json",
+    "sha256": "81826d60ea9372701cade2adfbb735409bb74bd3842ebaaba2082e4b19adb80f"
+  }
+}
