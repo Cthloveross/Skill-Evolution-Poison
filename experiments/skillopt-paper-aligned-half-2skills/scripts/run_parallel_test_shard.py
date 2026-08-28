@@ -465,6 +465,8 @@ def evaluate_shard(args: argparse.Namespace) -> dict[str, Any]:
         "hard_correct": sum(int(bool(row.get("hard", 0))) for row in rows.values()),
         "agent_failures": sum(row.get("agent_ok") is False for row in rows.values()),
     }
+    with (output_dir / RESULTS_NAME).open("rb") as stream:
+        os.fsync(stream.fileno())
     manifest.update(
         {
             "status": "completed",
@@ -781,4 +783,12 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    exit_code = main()
+    if len(sys.argv) > 1 and sys.argv[1] == "evaluate":
+        # Official rollout deliberately abandons timed-out HTTP futures. Once the
+        # completed manifest and results are durable, do not let Python's global
+        # ThreadPoolExecutor exit hook wait for those irrelevant requests.
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(exit_code)
+    raise SystemExit(exit_code)

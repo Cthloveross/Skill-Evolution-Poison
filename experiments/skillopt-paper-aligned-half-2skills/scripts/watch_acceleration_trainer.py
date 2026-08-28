@@ -30,7 +30,8 @@ def atomic_write_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def process_exists(pid: int) -> bool:
-    return (Path("/proc") / str(pid)).is_dir()
+    state = process_state(pid)
+    return state is not None and not state.startswith("Z")
 
 
 def process_state(pid: int) -> str | None:
