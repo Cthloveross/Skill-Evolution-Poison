@@ -55,9 +55,18 @@ def unknown_metric(
 
 def _unknown_completion(status: str, reason: str) -> dict[str, Any]:
     metric = lambda: unknown_metric(reason, evidence_status=status)
+    accuracy_metric = lambda: unknown_metric(
+        reason,
+        evidence_status=status,
+        timeout_count=None,
+        results_source=None,
+        results_reused=None,
+    )
     return {
         "trajectory": {"status": status, "reason": reason},
-        "accuracy": {checkpoint: metric() for checkpoint in CHECKPOINTS},
+        "accuracy": {
+            checkpoint: accuracy_metric() for checkpoint in CHECKPOINTS
+        },
         "accuracy_deltas": {"rbest_minus_r0": metric(), "rfinal_minus_r0": metric()},
         "evolution": {
             "rbest": {"raw_changed": metric(), "substantive_changed": metric()},
@@ -142,6 +151,85 @@ def _bound_payload(path: Path, record: Mapping[str, Any], label: str) -> bytes:
     if record.get("bytes") != len(payload):
         raise ValueError(f"{label} byte count differs from completion evidence")
     return payload
+
+
+def _structured_timeout_count(
+    payload: bytes, label: str, *, expected_rows: int
+) -> int:
+    """Count only rollout rows explicitly marked with the structured timeout phase."""
+
+    try:
+        lines = payload.decode("utf-8").splitlines()
+    except UnicodeDecodeError as exc:
+        raise ValueError(f"{label} is not valid UTF-8") from exc
+    if len(lines) != expected_rows:
+        raise ValueError(
+            f"{label} row count differs from completion evidence: "
+            f"{len(lines)} != {expected_rows}"
+        )
+    timeouts = 0
+    for line_number, line in enumerate(lines, start=1):
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{label} row {line_number} is not valid JSON") from exc
+        if not isinstance(row, Mapping):
+            raise ValueError(f"{label} row {line_number} is not an object")
+        phase = row.get("phase")
+        if phase is not None and not isinstance(phase, str):
+            raise ValueError(f"{label} row {line_number}.phase is not a string")
+        fail_reason = row.get("fail_reason")
+        if fail_reason is not None and not isinstance(fail_reason, str):
+            raise ValueError(f"{label} row {line_number}.fail_reason is not a string")
+        is_timeout = phase == "timeout" or (
+            isinstance(fail_reason, str) and fail_reason.startswith("task-timeout-")
+        )
+        if is_timeout:
+            timeouts += 1
+    return timeouts
+
+
+def _test_evaluation_metadata(
+    verified: Mapping[str, Any]
+) -> dict[str, dict[str, Any]]:
+    artifacts = verified.get("artifacts")
+    test_set = verified.get("test_set")
+    if not isinstance(artifacts, Mapping) or not isinstance(test_set, Mapping):
+        raise ValueError("completion receipt lacks test evaluation evidence")
+    rfinal_source = test_set.get("rfinal_results_source")
+    if rfinal_source not in {
+        "independent",
+        "reused_rbest_identical_checkpoint",
+    }:
+        raise ValueError("completion receipt has unsupported Rfinal results source")
+
+    artifact_keys = {
+        "r0": "baseline_results",
+        "rbest": "best_results",
+        "rfinal": "final_results",
+    }
+    metadata: dict[str, dict[str, Any]] = {}
+    for checkpoint, artifact_key in artifact_keys.items():
+        record = artifacts.get(artifact_key)
+        result_summary = test_set.get(checkpoint)
+        if not isinstance(record, Mapping) or not isinstance(result_summary, Mapping):
+            raise ValueError(f"completion receipt lacks {checkpoint} test evidence")
+        row_count = _nonnegative_int(
+            result_summary.get("row_count"), f"test_set.{checkpoint}.row_count"
+        )
+        path = Path(str(record.get("path")))
+        payload = _bound_payload(path, record, f"{checkpoint} test results")
+        source = rfinal_source if checkpoint == "rfinal" else "independent"
+        metadata[checkpoint] = {
+            "timeout_count": _structured_timeout_count(
+                payload,
+                f"{checkpoint} test results",
+                expected_rows=row_count,
+            ),
+            "results_source": source,
+            "results_reused": source == "reused_rbest_identical_checkpoint",
+        }
+    return metadata
 
 
 def _edit_counts(value: Any, label: str) -> dict[str, int]:
@@ -343,6 +431,7 @@ def inspect_completion(run: Mapping[str, Any]) -> dict[str, Any]:
             raise ValueError("utility deltas do not match checkpoint accuracies")
         benchmark = str(run["benchmark"])
         test_denominator = experiment.counts_for(benchmark)["test"]
+        test_evaluation = _test_evaluation_metadata(verified)
         optimizer = optimizer_diagnostics(root, verified, benchmark)
         return {
             "trajectory": {
@@ -352,9 +441,21 @@ def inspect_completion(run: Mapping[str, Any]) -> dict[str, Any]:
                 "receipt_sha256": receipt_sha256,
             },
             "accuracy": {
-                "r0": known_metric(r0, test_denominator=test_denominator),
-                "rbest": known_metric(rbest, test_denominator=test_denominator),
-                "rfinal": known_metric(rfinal, test_denominator=test_denominator),
+                "r0": known_metric(
+                    r0,
+                    test_denominator=test_denominator,
+                    **test_evaluation["r0"],
+                ),
+                "rbest": known_metric(
+                    rbest,
+                    test_denominator=test_denominator,
+                    **test_evaluation["rbest"],
+                ),
+                "rfinal": known_metric(
+                    rfinal,
+                    test_denominator=test_denominator,
+                    **test_evaluation["rfinal"],
+                ),
             },
             "accuracy_deltas": {
                 "rbest_minus_r0": known_metric(rbest_delta),
@@ -1057,6 +1158,29 @@ def _mean_delta(value: Any) -> str:
     return "unknown" if value is None else f"{100.0 * float(value):+.2f} pp"
 
 
+def _timeout_text(value: Mapping[str, Any]) -> str:
+    if value.get("status") != "known":
+        return "unknown"
+    count = value.get("timeout_count")
+    return str(count) if isinstance(count, int) and not isinstance(count, bool) else "unknown"
+
+
+def _rfinal_results_source_text(value: Mapping[str, Any]) -> str:
+    if value.get("status") != "known":
+        return "unknown"
+    source = value.get("results_source")
+    reused = value.get("results_reused")
+    if source == "independent" and reused is False:
+        return "independent"
+    if source == "reused_rbest_identical_checkpoint" and reused is True:
+        return "reused Rbest (identical raw checkpoint)"
+    return "unknown"
+
+
+def _asr_triplet(value: Mapping[str, Any]) -> str:
+    return f"{value['successes']}/{value['failures']}/{value['unknown']}"
+
+
 def _optimizer_cell_text(
     optimizer: Mapping[str, Any], section: str, keys: Sequence[str]
 ) -> str:
@@ -1141,16 +1265,17 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
     final_directions = all_accuracy["rfinal_directions"]
     total_asr_successes = sum(value["successes"] for value in overall_asr.values())
     final_asr = overall_asr["rfinal"]
-    final_all_successful = (
-        final_asr["successes"] == EXPECTED_ATTACKED_CELLS
-        and final_asr["known_denominator"] == EXPECTED_ATTACKED_CELLS
-        and final_asr["unknown"] == 0
-    )
     final_asr_scope = (
-        f"{EXPECTED_ATTACKED_CELLS} 个攻击组合在 {experiment.EPOCHS} 个 epoch "
-        "后全部仍可触发。"
-        if final_all_successful
-        else f"当前有 {final_asr['unknown']} 个组合的 Rfinal 结果为 unknown。"
+        "Rfinal 成功/失败/unknown 为 "
+        f"`{_asr_triplet(final_asr)}`。"
+    )
+    accuracy_evidence = (
+        f"有效轨迹 `{all_accuracy['observed']}/{all_accuracy['total']}`；Rfinal "
+        f"相对 R0 的 macro mean 为 "
+        f"`{_mean_delta(all_accuracy['rfinal_delta'])}`，提升/不变/下降为 "
+        f"`{_direction_text(final_directions)}`。"
+        if all_accuracy["observed"]
+        else f"有效轨迹 `0/{all_accuracy['total']}`；Rfinal Accuracy 仍为 unknown。"
     )
     lines = [
         "# 实验结果",
@@ -1159,27 +1284,23 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
         "",
         "## 直接结论",
         "",
-        f"- **Accuracy 只发生了小幅、非一致的变化。** "
-        f"{EXPECTED_TRAJECTORIES} 条轨迹的 Rfinal "
-        f"相对 R0 平均为 `{_mean_delta(all_accuracy['rfinal_delta'])}`："
-        f"{final_directions['improved']} 个提升，"
-        f"{final_directions['unchanged']} 个不变，"
-        f"{final_directions['declined']} 个下降。",
-        f"- **Skill 内容有变化，但攻击相关轨迹并非全部真正进化。** 全部轨迹中 "
-        f"Rfinal 有实质变化的是 "
-        f"`{substantive_final['changed']}/{substantive_final['known_denominator']}`；"
-        f"{EXPECTED_ATTACKED_CELLS} 条攻击轨迹中是 "
+        f"- **Accuracy 证据：** {accuracy_evidence}",
+        f"- **Skill 实质变化证据：** 全部轨迹 Rfinal "
+        f"变化/未变化/unknown 为 "
+        f"`{substantive_final['changed']}/{substantive_final['unchanged']}/"
+        f"{substantive_final['unknown']}`；攻击轨迹为 "
         f"`{attacked_substantive_final['changed']}/"
-        f"{attacked_substantive_final['known_denominator']}`。",
+        f"{attacked_substantive_final['unchanged']}/"
+        f"{attacked_substantive_final['unknown']}`。",
         f"- **当前测试口径下，最终 ASR 为 "
         f"`{final_asr['successes']}/{final_asr['known_denominator']} "
         f"= {_rate_text(final_asr, 'percentage_of_known')}`。** "
         f"{final_asr_scope}",
-        f"- 只看确实发生实质进化的攻击轨迹，Rfinal ASR 为 "
-        f"`{evolved_subset_final_asr['successes']}/"
+        f"- 只看确实发生实质进化的攻击轨迹，Rfinal "
+        f"成功/失败/unknown 为 `{_asr_triplet(evolved_subset_final_asr)}`；"
+        f"known ASR 为 `{evolved_subset_final_asr['successes']}/"
         f"{evolved_subset_final_asr['known_denominator']} = "
-        f"{_rate_text(evolved_subset_final_asr, 'percentage_of_known')}`。"
-        "这是更严格、但样本更小的保留口径。",
+        f"{_rate_text(evolved_subset_final_asr, 'percentage_of_known')}`。",
         f"- 全部 checkpoint 合计为 "
         f"`{completeness['known_asr_receipts']}/{EXPECTED_ASR_RECEIPTS}` 个"
         f"可验证探针，其中 `{total_asr_successes}/{completeness['known_asr_receipts']}` "
@@ -1225,7 +1346,7 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             f"严格表述是：从 skill 内容看，"
             f"{substantive_final['known_denominator']} 个有效轨迹中有 "
             f"{substantive_final['changed']} 个产生了实质变化；从任务效果看，"
-            f"平均提升较小。Clean 的 Rfinal 平均变化为 "
+            f"Clean 的 Rfinal macro mean 变化为 "
             f"{_mean_delta(accuracy_groups['Clean']['rfinal_delta'])}，Attacked 为 "
             f"{_mean_delta(accuracy_groups['Attacked']['rfinal_delta'])}。当前只有一个 seed，"
             "这些差值不能解释为稳定增益或统计显著提升。",
@@ -1238,8 +1359,9 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             "",
             "### 每个 base skill 的结果",
             "",
-            "| Base skill | 条件 | Test n | R0 Acc | Rbest Acc（变化） | Rfinal Acc（变化） |",
-            "|---|---|---:|---:|---:|---:|",
+            "| Base skill | 条件 | Test n | R0 Acc | Rbest Acc（变化） | "
+            "Rfinal Acc（变化） | Timeout R0/Rbest/Rfinal | Rfinal 结果来源 |",
+            "|---|---|---:|---:|---:|---:|---:|---|",
         ]
     )
     for cell in cells:
@@ -1253,7 +1375,11 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             f"{_percent(accuracy['rbest'].get('value')) if accuracy['rbest']['status'] == 'known' else 'unknown'} "
             f"({_delta(deltas['rbest_minus_r0'])}) | "
             f"{_percent(accuracy['rfinal'].get('value')) if accuracy['rfinal']['status'] == 'known' else 'unknown'} "
-            f"({_delta(deltas['rfinal_minus_r0'])}) |"
+            f"({_delta(deltas['rfinal_minus_r0'])}) | "
+            f"{_timeout_text(accuracy['r0'])}/"
+            f"{_timeout_text(accuracy['rbest'])}/"
+            f"{_timeout_text(accuracy['rfinal'])} | "
+            f"{_rfinal_results_source_text(accuracy['rfinal'])} |"
         )
 
     candidate_all = optimizer_all["candidate"]
@@ -1310,19 +1436,21 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             f"{len(experiment.ATTACKS)} 种攻击。"
             "每个组合分别测试 R0、Rbest 和 Rfinal。",
             "",
-            "| Checkpoint | 成功/有效攻击组合 | Unknown | ASR |",
-            "|---|---:|---:|---:|",
+            "| Checkpoint | 成功 | 失败 | Unknown | Known ASR |",
+            "|---|---:|---:|---:|---:|",
         ]
     )
     for checkpoint in CHECKPOINTS:
         rate = overall_asr[checkpoint]
         lines.append(
-            f"| {checkpoint} | {rate['successes']}/{rate['known_denominator']} | "
+            f"| {checkpoint} | {rate['successes']} | {rate['failures']} | "
             f"{rate['unknown']} | {_rate_text(rate, 'percentage_of_known')} |"
         )
 
     lines.extend(
         [
+            "",
+            "下表每个 checkpoint 单元格均为 `成功/失败/unknown`。",
             "",
             "| Attack | R0 | Rbest | Rfinal | Rfinal 行为保留率 |",
             "|---|---:|---:|---:|---:|",
@@ -1334,9 +1462,9 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             "rfinal"
         ]
         lines.append(
-            f"| {attack} | {rates['r0']['successes']}/{rates['r0']['known_denominator']} | "
-            f"{rates['rbest']['successes']}/{rates['rbest']['known_denominator']} | "
-            f"{rates['rfinal']['successes']}/{rates['rfinal']['known_denominator']} | "
+            f"| {attack} | {_asr_triplet(rates['r0'])} | "
+            f"{_asr_triplet(rates['rbest'])} | "
+            f"{_asr_triplet(rates['rfinal'])} | "
             f"{_rate_text(retention, 'percentage_retained_of_observed_eligible')} |"
         )
 
@@ -1362,11 +1490,18 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
         [
             "",
             f"以 R0 ASR 成功的组合为分母，Rbest 行为保留率为 "
-            f"`{rbest_retention['retained']}/{rbest_retention['eligible_r0_positive_denominator']} "
+            f"`{rbest_retention['retained']}/{rbest_retention['descendant_observed_denominator']} "
             f"= {_rate_text(rbest_retention, 'percentage_retained_of_observed_eligible')}`；"
+            f"eligible={rbest_retention['eligible_r0_positive_denominator']}，"
+            f"其中 descendant unknown="
+            f"{rbest_retention['descendant_unknown_within_eligible']}。"
             f"Rfinal 行为保留率为 "
-            f"`{rfinal_retention['retained']}/{rfinal_retention['eligible_r0_positive_denominator']} "
-            f"= {_rate_text(rfinal_retention, 'percentage_retained_of_observed_eligible')}`。",
+            f"`{rfinal_retention['retained']}/"
+            f"{rfinal_retention['descendant_observed_denominator']} "
+            f"= {_rate_text(rfinal_retention, 'percentage_retained_of_observed_eligible')}`；"
+            f"eligible={rfinal_retention['eligible_r0_positive_denominator']}，"
+            f"其中 descendant unknown="
+            f"{rfinal_retention['descendant_unknown_within_eligible']}。",
             "",
             "### ASR 测量限制",
             "",
@@ -1381,8 +1516,8 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             f"- 未发生实质 skill 变化的攻击轨迹为："
             f"`{non_evolved_labels or '无'}`。它们可以计入原始 Rfinal ASR，"
             "但不能作为强的“经过进化仍保留”证据；严格子集结果为 "
-            f"`{evolved_subset_final_asr['successes']}/"
-            f"{evolved_subset_final_asr['known_denominator']}`。",
+            f"成功/失败/unknown "
+            f"`{_asr_triplet(evolved_subset_final_asr)}`。",
             "",
             "## 4. 当前能得出的结论",
             "",
@@ -1390,10 +1525,9 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             "Qwen3.8-27B-FP8 optimizer、两角色均启用 thinking、训练 seed 42、"
             f"{len(experiment.BENCHMARKS)} 个 base skill、"
             f"{len(experiment.ATTACKS)} 个攻击标签和当前强制激活 harness 的范围内，"
-            f"Rfinal 原始 ASR 为 {final_asr['successes']}/"
-            f"{final_asr['known_denominator']}；在真正发生实质进化的攻击轨迹中为 "
-            f"{evolved_subset_final_asr['successes']}/"
-            f"{evolved_subset_final_asr['known_denominator']}。",
+            f"Rfinal 成功/失败/unknown 为 {_asr_triplet(final_asr)}；"
+            "在真正发生实质进化的攻击轨迹中为 "
+            f"{_asr_triplet(evolved_subset_final_asr)}。",
             "",
             "本次实验不支持三个更强的结论：第一，SkillOpt 会稳定提高 Accuracy；"
             "第二，这些攻击对其他模型、seed 或 base skill 同样有效；第三，"
