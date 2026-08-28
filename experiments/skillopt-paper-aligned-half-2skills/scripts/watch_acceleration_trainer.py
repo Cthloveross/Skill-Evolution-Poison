@@ -44,6 +44,18 @@ def process_state(pid: int) -> str | None:
     return None
 
 
+def timestamp_age_seconds(value: str | None) -> float | None:
+    if not value:
+        return None
+    try:
+        observed = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    if observed.tzinfo is None:
+        observed = observed.replace(tzinfo=timezone.utc)
+    return max(0.0, (datetime.now(timezone.utc) - observed).total_seconds())
+
+
 def validate_trainer(pid: int, run_root: Path) -> None:
     try:
         cmdline = (Path("/proc") / str(pid) / "cmdline").read_bytes()
@@ -60,6 +72,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--trainer-pid", type=int, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--poll-seconds", type=float, default=5.0)
+    parser.add_argument("--stale-heartbeat-seconds", type=float, default=300.0)
+    parser.add_argument("--max-trainer-pause-seconds", type=float, default=900.0)
     return parser.parse_args()
 
 
@@ -67,6 +81,7 @@ def main() -> int:
     args = parse_args()
     run_root = args.run_root.resolve(strict=True)
     state_path = run_root / "acceleration" / "watchdog-state.json"
+    coordinator_state_path = run_root / "acceleration" / "coordinator-state.json"
     validate_trainer(args.trainer_pid, run_root)
     state: dict[str, Any] = {
         "schema_version": 1,
@@ -79,7 +94,44 @@ def main() -> int:
     }
     atomic_write_json(state_path, state)
 
+    forced_resume_reason: str | None = None
     while process_exists(args.coordinator_pid):
+        trainer_state = process_state(args.trainer_pid)
+        if trainer_state is not None and trainer_state.startswith("T"):
+            try:
+                coordinator_state = json.loads(coordinator_state_path.read_text())
+            except (OSError, json.JSONDecodeError):
+                coordinator_state = {}
+            heartbeat_age = timestamp_age_seconds(
+                coordinator_state.get("last_checked_at")
+            )
+            pause_age = timestamp_age_seconds(
+                coordinator_state.get("trainer_paused_at")
+            )
+            if heartbeat_age is not None and heartbeat_age > args.stale_heartbeat_seconds:
+                forced_resume_reason = (
+                    f"coordinator heartbeat stale for {heartbeat_age:.1f}s"
+                )
+            elif pause_age is not None and pause_age > args.max_trainer_pause_seconds:
+                forced_resume_reason = f"trainer paused for {pause_age:.1f}s"
+            if forced_resume_reason:
+                validate_trainer(args.trainer_pid, run_root)
+                os.kill(args.trainer_pid, signal.SIGCONT)
+                state["forced_resume_reason"] = forced_resume_reason
+                state["trainer_resumed_at"] = utc_now()
+                state["status"] = "forced_resume_requested"
+                atomic_write_json(state_path, state)
+                try:
+                    os.kill(args.coordinator_pid, signal.SIGTERM)
+                    state["coordinator_sigterm_sent_at"] = utc_now()
+                except ProcessLookupError:
+                    pass
+                time.sleep(1)
+                state["trainer_state_after_action"] = process_state(args.trainer_pid)
+                state["status"] = "forced_resume_completed"
+                state["completed_at"] = utc_now()
+                atomic_write_json(state_path, state)
+                return 0
         time.sleep(args.poll_seconds)
 
     state["coordinator_disappeared_at"] = utc_now()
